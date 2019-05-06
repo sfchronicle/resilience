@@ -1,0 +1,26 @@
+{
+  "_comment": "The possible paywall values are 'meter' (wall after 5), 'paywall' (wall immediately), or 'free' (no wall)",
+  "PAYWALL_SETTING": "meter",
+  "EMBEDDED": "false",
+  "GOOGLE_SHEETS": [],
+  "GOOGLE_DOCS": [],
+  "PROJECT": {
+    "_comment": "IMPORTANT: SUBFOLDER and SLUG for used for file pathing and the deploy script! Take care with your edits to them! NOTE: Stage deploys will automatically go to 'test-proj'",
+    "SUBFOLDER": "2019",
+    "SLUG": "resilience",
+
+    "TITLE": "",
+    "URL": "https://projects.sfchronicle.com",
+    "IMAGE": "",
+    "DESCRIPTION": "",
+    "TWITTER_TEXT": "Some social text",
+    "HEARST_CATEGORY": "news", 
+    "DATE": "January 1, 1970 6:00 p.m.",
+    "AUTHORS": [
+      {
+        "AUTHOR_NAME": "Interactives Team",
+        "AUTHOR_PAGE": "https://www.sfchronicle.com/newsroom_contacts/"
+      }
+    ]
+  }
+}

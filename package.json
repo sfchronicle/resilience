@@ -1,0 +1,57 @@
+{
+  "name": "sfc-gatsby-starter",
+  "description": "SFC Gatsby starter",
+  "version": "1.0.0",
+  "author": "Evan Wagstaff <evanjwagstaff@gmail.com>",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.12",
+    "@fortawesome/free-brands-svg-icons": "^5.6.3",
+    "@fortawesome/free-solid-svg-icons": "^5.6.3",
+    "@fortawesome/react-fontawesome": "^0.1.3",
+    "archieml": "^0.4.2",
+    "gatsby": "^2.3.2",
+    "gatsby-image": "^2.0.15",
+    "gatsby-plugin-less": "^2.0.7",
+    "gatsby-plugin-manifest": "^2.0.5",
+    "gatsby-plugin-react-helmet": "^3.0.0",
+    "gatsby-plugin-sharp": "^2.0.31",
+    "gatsby-source-filesystem": "^2.0.28",
+    "gatsby-transformer-sharp": "^2.1.4",
+    "google-spreadsheets": "^2.0.0",
+    "googleapis": "18.0.0",
+    "i": "^0.3.6",
+    "json": "^9.0.6",
+    "less": "^3.8.1",
+    "moment": "^2.22.2",
+    "npm": "^6.5.0",
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
+    "react-helmet": "^5.2.0",
+    "react-lazyload": "^2.5.0",
+    "react-waypoint": "^8.1.0",
+    "require-directory": "^2.1.1"
+  },
+  "keywords": [
+    "gatsby"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "deploy:prod": "npm run clean && export GATSBY_DEPLOY_ENV=production && gatsby build --prefix-paths && tasks/deploy.sh prod",
+    "deploy:stage": "npm run clean && export GATSBY_DEPLOY_ENV=testing && gatsby build --prefix-paths && tasks/deploy.sh stage",
+    "deploy:app": "npm run clean && export GATSBY_DEPLOY_ENV=app && gatsby build --prefix-paths && tasks/deploy.sh app",
+    "sheets": "tasks/google-sheets.js",
+    "docs": "tasks/google-docs.js",
+    "dev": "export GATSBY_DEPLOY_ENV=development && gatsby develop -H 0.0.0.0",
+    "clean": "rm -rf public_export && rm -rf public",
+    "start": "npm run dev",
+    "format": "prettier --write \"src/**/*.js\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "prettier": "^1.14.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+  }
+}
