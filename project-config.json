@@ -8,14 +8,14 @@
     "_comment": "IMPORTANT: SUBFOLDER and SLUG for used for file pathing and the deploy script! Take care with your edits to them! NOTE: Stage deploys will automatically go to 'test-proj'",
     "SUBFOLDER": "trackers",
     "SLUG": "earthquakes",
-    "DISPLAY_HEADLINE": "Quake Tracker",
+    "DISPLAY_HEADLINE": "Disaster Risk Map",
     "IMAGE": "https://s.hdnux.com/photos/75/62/32/17243022/4/rawImage.jpg",
     "SEO_TITLE": "Earthquake Tracker: The latest quakes in California and across the world",
     "SOCIAL_TITLE": "Earthquake Tracker: The latest quakes in California and across the world in real time",
     "DESCRIPTION": "See significant earthquakes that have occurred in the past 30 days in real time, focusing on epicenters in California.",
     "TWITTER_TEXT": "Earthquake Tracker: See the latest quakes in California and across the world in real time",
     "HEARST_CATEGORY": "news", 
-    "DATE": "April 18, 2019 4:00 a.m.",
+    "DATE": "June 1, 2019 4:00 a.m.",
     "MOD_DATE": "",
     "AUTHORS": [
       {

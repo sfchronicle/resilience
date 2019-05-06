@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 
 import Layout from '../components/layout'
 import TrackerMap from '../components/trackermap'
@@ -12,26 +12,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 let projectConfig = require("../../project-config.json");
 let project = projectConfig.PROJECT;
 
-// Get data from quake server
-let serverNorCalData = {};
-let serverSoCalData = {};
-let serverUSAData = {};
-let serverWorldData = {};
-let quakeServerData = { 
-  quakes: [],
-  shakemaps: []
-};
-try {
-  serverNorCalData = require("../data/norcal_data.sheet.json");
-  serverSoCalData = require("../data/socal_data.sheet.json");
-  serverUSAData = require("../data/usa_data.sheet.json");
-  serverWorldData = require("../data/world_data.sheet.json");
-  quakeServerData = require("../data/quake_server.sheet.json");
-} catch (err){
-  // That's okay
-}
-console.log("USGS data", serverNorCalData, serverSoCalData, serverUSAData, serverWorldData, quakeServerData);
-
 // Bring in moment to handle dates
 var moment = require('moment');
 
@@ -42,115 +22,9 @@ var endDate = moment().add(2, "days").format("YYYY-MM-DD");
 // Save current env
 const env = process.env.GATSBY_DEPLOY_ENV;
 
-// Format quakes data to drop it into state immediately
-// Filter Nevada results out of norcal
-// We'll get them back in if they have a 5.0 via the USA search
-let patt = new RegExp(", Nevada$");
-serverNorCalData.features = serverNorCalData.features.filter((item) => {
-  return patt.test(item.properties.place) === false;
-});
-// Filter Mexico out from USA
-patt = new RegExp(", Mexico$");
-serverUSAData.features = serverUSAData.features.filter((item) => {
-  return patt.test(item.properties.place) === false;
-});
-let resultArray = [serverNorCalData, serverSoCalData, serverUSAData, serverWorldData];
-let queryObject = {};
-let latestQuake = {
-  id: "",
-  time: 0,
-  lat: "",
-  lng: ""
-};
-// Now smash the results together
-for (var i = 0; i < resultArray.length; i++){
-  for (var feature in resultArray[i].features){
-    let item = resultArray[i].features[feature];
-    // Fix direction format
-    let formatted_place = item['properties']['place'];
-    formatted_place = formatted_place
-    .replace(/ N /, " north ")
-    .replace(/ S /, " south ")
-    .replace(/ E /, " east ")
-    .replace(/ W /, " west ")
-    .replace(/ [E|N]*?NE /, " northeast ")
-    .replace(/ [S|W]*?SW /, " southwest ")
-    .replace(/ [N|W]*?NW /, " northwest ")
-    .replace(/ [S|E]*?SE /, " southeast ");
-    // Add AP CA abbrev
-    formatted_place = formatted_place.replace(", CA", ", Calif.")
-    // Fix distance format
-    let distanceKm = formatted_place.match(/(\d+)km/)[1];
-    let distanceMi = parseInt(distanceKm) / 1.609;
-    // Round it 
-    distanceMi = Math.round( distanceMi * 10 ) / 10;
-    // Replace it
-    formatted_place = formatted_place.replace(distanceKm.toString() + "km", distanceMi.toString() + " miles");
-
-    // Find the quake with the most recent time
-    if (item['properties']['time'] > latestQuake.time){
-      latestQuake.id = item['id'];
-      latestQuake.time = item['properties']['time'];
-      latestQuake.lat = item['geometry']['coordinates'][1];
-      latestQuake.lng = item['geometry']['coordinates'][0];
-    }
-
-    // Give special priority to CA quakes
-    let isCalifornia = false;
-    if (i < 2){
-      isCalifornia = true;
-    }
-
-    // By nature of having the ID as the key, this will keep results de-duped between sets
-    queryObject[item['id']] = {
-      quakeid: item['id'],
-      lat: item['geometry']['coordinates'][1],
-      long: item['geometry']['coordinates'][0],
-      mag: item['properties']['mag'],
-      time: item['properties']['time'],
-      prox_place: formatted_place,
-      ca_quake: isCalifornia
-    }
-  }
-}
-
-// Create the final array of quakes
-// If we already have some info from our EC2, merge that in here so it takes priority
-// Order: Priority items first by date, then non-priority by date
-let quakeArray = [];
-for (let quake in Object.keys(queryObject)){
-  //console.log("PUSHING IN", quake, Object.keys(queryObject)[quake], queryObject[Object.keys(queryObject)[quake]])
-  quakeArray.push(queryObject[Object.keys(queryObject)[quake]]);
-}
-// Combine with server data
-quakeArray = quakeArray.concat(quakeServerData.quakes);
-// Now sort!
-quakeArray.sort((b, a) => {
-  let result = 0;
-  if (a.priority && !b.priority){
-    result = 1;
-  } else if (!a.priority && b.priority){
-    result = -1;
-  } else { // Either neither is priority or both are, so check time
-    if (moment(a.time).isAfter(moment(b.time))){
-      result = 1;
-    } else if (moment(a.time).isBefore(moment(b.time))){
-      result = -1;
-    }
-    // If both are the same time (which shouldn't happen) result is already 0
-  }
-  return result;
-});
-
-console.log("FINALIZED QUAKE ARRAY", quakeArray);
-
 export default class IndexPage extends PureComponent {
   constructor() {
-    super()
-    this.state = {
-      quakes: quakeArray,
-      selected_quake: 0
-    }
+    super();
 
     this.map = React.createRef();
   }
@@ -168,25 +42,23 @@ export default class IndexPage extends PureComponent {
     });
   };
 
-  adjustQuakeNav(status){
-    // Add/remove fixed to quake nav
-    this.setState({
-      fixedNav: status
-    });
-  }
-
-  selectFromList(keyIndex){
-    // Update active quake
-    this.setState({
-      selected_quake: keyIndex
-    });
-  };
-
   // Enable the social popup
   handleFacebookClick(e) {
     e.preventDefault();
     window.open(`https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fprojects.sfchronicle.com%2F${ project.SUBFOLDER }%2F${ project.SLUG }%2F`, 'facebook-share-dialog', 'width=626,height=436');
     return false;
+  }
+
+  prepDates () {
+    // Convert date to readable time
+    this.readablePubDate = this.convertDatesToAP(projectConfig.PROJECT.DATE);
+    // Check safely for MOD_DATE
+    if (typeof projectConfig.PROJECT.MOD_DATE !== "undefined"){
+      this.readableModDate = this.convertDatesToAP(projectConfig.PROJECT.MOD_DATE);
+    } else {
+      // If MOD_DATE does not exist, set false so it doesn't render
+      this.readableModDate = false;
+    }
   }
 
   convertDatesToAP (dateString) {
@@ -198,6 +70,28 @@ export default class IndexPage extends PureComponent {
   }
 
 	render () {
+    // Include related links for bottom
+    const linkArray = require('../data/sfc/related_links.json');
+
+    // Handle date parsing
+    this.prepDates();
+
+    // Convert date string to AP style abbreviations
+    let pubdateString = this.readablePubDate;
+    let moddateString = "";
+    // Only check moddate if we have a value
+    if (this.readableModDate){
+      moddateString = this.readableModDate;
+
+      // Chop time off pubdate if possible
+      try {
+        this.readablePubDate = this.readablePubDate.match(/.*\d{4}/gm)[0];
+      } catch (err){
+        // That's fine
+        console.log(err);
+      }
+    }
+
 		return (
 		  <Layout>
 		    <div id="project-wrapper">
@@ -235,90 +129,21 @@ export default class IndexPage extends PureComponent {
                   </div>
                 </div>
 
-  							<p className="instructions">This earthquake map created in The Chronicle’s newsroom highlights quakes that have occurred in the past 30 days and focuses on epicenters in California. The data updates in real time and comes from the U.S. Geological Survey.</p>
+  							<p className="instructions">This map highlights the risk areas in California for four major natural disasters: earthquakes, fires, floods and landslides. Enter your address to see which zones impact your home.</p>
             
-                {this.state.quakes &&
-                  <p className="instructions"><span className="red">Last updated:</span> <time id="recent-report" dateTime={ moment(latestQuake.time).format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="dateModified">{moment(latestQuake.time).format("MMMM D, YYYY h:mm A").replace("AM", "a.m.").replace("PM", "p.m.")}</time></p>
-                }
+                  <p className="instructions"><time className="dateline intro-description" dateTime={moment(projectConfig.PROJECT.DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="datePublished">{ pubdateString }</time>
+                  { moddateString &&
+                    <Fragment>
+                      &nbsp;|&nbsp;<time className="dateline mod-date" dateTime={ moment(projectConfig.PROJECT.MOD_DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="dateModified">Updated: { moddateString }</time>
+                    </Fragment>
+                  }</p>
 
               </div>
-
-              {this.state.quakes &&
-                <div itemScope itemType="http://schema.org/ItemList" className={this.state.fixedNav ? "quakes-list fixed" : "quakes-list"}>
-                  {this.state.quakes.map((item, index) => {
-                    let quakeObj = item;
-                    // Handle time 
-                    let duration = moment.duration(moment().diff(moment(quakeObj.time)));
-                    let minutes = duration.asMinutes();
-                    // Format the class for the list item
-                    let quakeClass = this.state.selected_quake === index ? "quake-item active" : "quake-item";
-                    // Alert criteria here
-                    if (quakeObj.ca_quake && quakeObj.mag > 6){
-                      // Alert status at >6 in CA
-                      quakeClass += " alert";
-                    } else if (!quakeObj.ca_quake && quakeObj.mag > 8){
-                      // Alert status at >8 anywhere
-                      quakeClass += " alert";
-                    }
-
-                    let timeWord = "";
-                    let timeAmount = 0;
-                    if (minutes < 1440){
-                      if (minutes >= 60){
-                        // Measure in hours
-                        timeAmount = Math.floor(minutes/60);
-                        if (timeAmount === 1){
-                          timeWord = "hour";
-                        } else {
-                          timeWord = "hours";
-                        }
-                      } else {
-                        // Measure in minutes
-                        timeAmount = Math.floor(minutes);
-                        if (timeAmount === 1){
-                          timeWord = "minute";
-                        } else {
-                          timeWord = "minutes";
-                        }
-                      }
-                    }
-
-                    return (
-                      <div className={quakeClass} onClick={(e) => this.panToQuake(e, quakeObj.lat, quakeObj.long, index)} key={"quake" + index}>
-                        <div className="bigmag">
-                          <div>
-                            <p>{(Math.round( quakeObj.mag * 10 ) / 10).toFixed(1)}</p>
-                            <p className="smallword">magnitude</p>
-                          </div>
-                        </div>
-                        <div className="quake-info">
-                          {/* Handle if time is less than 24 hours*/}
-                          { minutes < 1440 ? (
-                            <div className="timestamp">{timeAmount} {timeWord} ago</div>
-                          ) : (
-                            <div className="timestamp">{moment(quakeObj.time).format("MMMM D, YYYY h:mm A").replace("AM", "a.m.").replace("PM", "p.m.")}</div>
-                          )}
-                          <br />
-                          <span itemProp="itemListElement" itemScope itemType="http://schema.org/ListItem">Epicenter {quakeObj.prox_place}</span>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-              }
             </div>
 
             {/* Quake map here */}
-            {this.state.quakes ? (
-              <TrackerMap ref={this.map} quakes={this.state.quakes} serverData={quakeServerData} startLat={latestQuake.lat} startLng={latestQuake.lng} latestQuake={latestQuake.id} selectFromList={this.selectFromList.bind(this)} adjustQuakeNav={(status) => this.adjustQuakeNav(status)} />
-            ) : (
-              <div id="tracker-outer">
-                {/* Simulate what's supposed to be there so it's sized correctly */}
-                <div className="map-wrapper loading">
-                  <FontAwesomeIcon icon="globe" className="faa-tada animated" />
-                </div>
-              </div>
-            )}
+
+            <TrackerMap ref={this.map} startLat={37.8044} startLng={-122.2711} />
 
           </div>
 

@@ -90,7 +90,7 @@ body #project-wrapper {
 
 			h1 {
 				margin:0;
-				font-size: 50px;
+				font-size: 70px;
 
 				@media @tablet {
 					font-size: 40px;
@@ -161,6 +161,10 @@ body #project-wrapper {
 				width: 100%;
 				margin-top: 0px;
 				font-family: @med-graphics;
+
+				.fire-image {
+		    	opacity: 0.5;
+		    }
 
 				.leaflet-pane {
 					.quake-contour, .magnitude-icon {
@@ -411,6 +415,30 @@ body #project-wrapper {
 
 					@media @mobile {
 						font-size: 12px;
+					}
+
+					.option-box {
+						display: flex;
+    				flex-wrap: wrap;
+
+    				.option {
+    					flex: 0 0 calc(50% - 4px);
+    					padding: 5px;
+    					border: 1px solid #666;
+    					border-radius: 4px;
+    					margin: 2px;
+    					cursor: pointer;
+    					font-weight: bold;
+
+    					&:hover {
+    						background: #ddd;
+    					}
+
+    					&.active {
+    						background: #666;
+    						color: white;
+    					}
+    				}
 					}
 
 					.icon-key {	
