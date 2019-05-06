@@ -22,8 +22,9 @@ a, p a {
   h1 {
     font-family: @title;
     letter-spacing: 1px;
+    font-weight: 400;
     font-size: 50px;
-    line-height: 60px;
+    line-height: 1.2;
     margin-bottom: 15px;
 
     @media @tablet {
@@ -46,12 +47,7 @@ a, p a {
     font-size: 14px;
     font-family: @med-graphics;
     color: @black;
-
-    &.mod-date {
-      border-left: 1px solid #ccc;
-      padding-left: 15px;
-      margin-left: 15px;
-    }
+    margin-bottom: 15px;
   }
 
   time.dateline {
@@ -100,7 +96,12 @@ figcaption.caption {
   }
 }
 
-#title, #credits, .article {
+#title{
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+#credits, .article {
   max-width: 730px;
   margin: 0 auto;
   padding: 0 15px;
@@ -161,11 +162,5 @@ figcaption.caption {
 
   .credit-header {
     margin-top: 15px;
-  }
-}
-
-.wcm-image-wrapper {
-  img {
-    width: 100%;
   }
 }

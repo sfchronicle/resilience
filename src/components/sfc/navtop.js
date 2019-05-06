@@ -3,9 +3,9 @@ import React, { Component } from "react";
 import Waypoint from 'react-waypoint';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
-// Get data from config
-let projectConfig = require("../../../project-config.json");
-let project = projectConfig.PROJECT;
+// Get data from sheet
+let storySettings = require("../../data/story_settings.sheet.json");
+storySettings = storySettings[0];
 
 class NavTop extends Component {
 	constructor(props) {
@@ -42,7 +42,7 @@ class NavTop extends Component {
 		// Enable the social popup
 		this.handleFacebookClick = (e) => {
 			e.preventDefault();
-			window.open(`https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fprojects.sfchronicle.com%2F${ project.SUBFOLDER }%2F${ project.SLUG }%2F`, 'facebook-share-dialog', 'width=626,height=436');
+			window.open(`https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fprojects.sfchronicle.com%2F${ storySettings.Year }%2F${ storySettings.Slug }%2F`, 'facebook-share-dialog', 'width=626,height=436');
 			return false;
 		}
 
@@ -69,7 +69,7 @@ class NavTop extends Component {
 					  </div>
 
 					  <div className="link social email">
-					    <a id="mail-icon" title="Share via email" href={`mailto:?subject=${ project.TITLE }&body=${ project.DESCRIPTION }%0A%0A${ project.URL }${ project.SUBFOLDER }%2F${ project.SLUG }`}>
+					    <a id="mail-icon" title="Share via email" href={`mailto:?subject=${ storySettings.Title }&body=${ storySettings.SEO_Description }%0A%0Ahttps%3A%2F%2Fprojects.sfchronicle.com%2F${ storySettings.Year }%2F${ storySettings.Slug }`}>
 					      <FontAwesomeIcon icon="envelope"/>
 					    </a>
 					  </div>
@@ -81,7 +81,7 @@ class NavTop extends Component {
 					  </div>
 
 					  <div className="link social twitter">
-					    <a target="_blank" rel="noopener noreferrer" id="twitter-icon" title="Share on Twitter" href={`https://twitter.com/intent/tweet?url=${ project.URL }${ project.SUBFOLDER }%2F${ project.SLUG }&text=${ project.TWITTER_TEXT }`}>
+					    <a target="_blank" rel="noopener noreferrer" id="twitter-icon" title="Share on Twitter" href={`https://twitter.com/intent/tweet?url=https%3A%2F%2Fprojects.sfchronicle.com%2F${ storySettings.Year }%2F${ storySettings.Slug }&text=${ storySettings.Twitter_Text }`}>
 					      <FontAwesomeIcon icon={["fab", "twitter"]}/>
 					    </a>
 					  </div>

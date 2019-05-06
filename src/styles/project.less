@@ -1,11 +1,785 @@
 @import (less) "seed";
 
-// Project CSS goes below
-.img-wrapper {
-	text-align: center;
-	margin: auto;
+@size3: 10px;
+@size4: 12px;
+@size5: 16px;
+@size6: 24px;
+@sizeMax: 40px;
 
-	img {
+// Project CSS goes below
+
+body.noscroll, html.noscroll {
+	height: 0;
+	overflow: hidden;
+}
+
+body #project-wrapper {
+	margin-top: 0;
+
+	h2 {
+		text-align: center;
+		font-family: @banner;
+		font-size: 23px;
+
+		@media (max-width: 979px){
+			font-size: 20px;
+		}
+	}
+
+	.related-link-wrapper {
+		margin-top: 30px;
+	}
+
+	.about-border {
+		max-width: 960px;
 		width: 100%;
 	}
+
+	p.description-text {
+		font-size: 16px;
+		line-height: 22px;
+	}
+
+	@media @mobile{
+		margin-top:15px;
+	}
 }
+
+.flex-topper {
+	display: flex;
+	margin-bottom: 40px;
+	height: 100vh;
+  overflow: hidden;
+  border-bottom: 1px solid #ccc;
+
+	@media (max-width: 979px){
+		display: block;
+		height: auto;
+		min-height: calc(100vh - 100px);
+		border-bottom: none;
+	}
+
+	#intro {
+		flex: 0 0 430px;
+
+		.logo-link {
+			text-align: center;
+			display: block;
+		}
+
+		.social-box {
+			text-align: center;
+			margin-bottom: 5px;
+
+			.link.social {
+				float: none;
+
+				a {
+					color: #222;
+
+					:hover {
+						color: #666;
+					}
+				}
+			}
+		}
+
+		#title {
+			padding: 10px 20px 0;
+			text-align:center;
+
+			h1 {
+				margin:0;
+				font-size: 50px;
+
+				@media @tablet {
+					font-size: 40px;
+					line-height: 1;
+				}
+			}
+
+			p {
+				font-size: 16px;
+				max-width: 580px;
+				line-height: 22px;
+
+				&.instructions {
+					font-family: @national-book;
+
+					.red {
+						color: @redlink;
+					}
+
+					#recent-report {
+						font-family: @block-graphics;
+					}
+				}
+			}
+
+			hr {
+				margin-top: 0;
+				width: 100%;
+			}
+		}
+	}
+
+	#tracker-outer {
+		flex: 1 1 70%;
+
+		.map-wrapper {
+			position: relative;
+			max-width: 1400px;
+			margin-bottom: 20px;
+			overflow: hidden;
+
+			&.loading {
+				background-color: #ccc;
+				display: flex;
+				font-size: 120px;
+				justify-content: center;
+    		align-items: center;
+    		height: 100vh;
+			}
+
+			// Overriding the mobile stuff
+			@media (min-width: 767px) {
+				height: calc(100vh - 115px);
+			}
+
+			&.fixed {
+				position: fixed;
+		    top: 0;
+		    width: 100%;
+		    height: 100vh;
+		    z-index: 10002;
+		    margin: 0;
+		    margin-top: 100px;
+			}
+
+			.leaflet-container {
+				height: 100vh;
+				width: 100%;
+				margin-top: 0px;
+				font-family: @med-graphics;
+
+				.leaflet-pane {
+					.quake-contour, .magnitude-icon {
+						pointer-events: none; /* Prevent weird hover/click effects */
+
+						&.hide_icons {
+							display: none;
+						}
+					}
+
+					.quake-icon {
+						display: flex;
+					  justify-content: center;
+					  align-items: center;
+
+					  .quake-wrapper {
+							padding: 5px;
+							background: black;
+							border: 2px solid white;
+							border-radius: 136px;
+						}
+
+					  &.circleMax {
+					  	.quake-wrapper {
+					  		padding: @sizeMax/2;
+					  	}
+					  }
+					  &.circle6 {
+					  	.quake-wrapper {
+					  		padding: @size6/2;
+					  	}
+					  }
+					  &.circle5 {
+					  	.quake-wrapper {
+					  		padding: @size5/2;
+					  	}
+					  }
+					  &.circle4 {
+					  	.quake-wrapper {
+					  		padding: @size4/2;
+					  	}
+					  }
+					  &.circle3 {
+					  	.quake-wrapper {
+					  		padding: @size3/2;
+					  	}
+					  }
+					}
+
+					// Loop to create the ripple effect
+					@iterations: 20;
+					.mag-anim-loop (@i) when (@i > 0) {
+						//@reverseNumber: 20 - @i;
+						@magTitle: ~"mag_@{i}";
+				    .magnitude_anim_@{i} {
+				      animation: @magTitle 20s infinite; //width: ~"@{i}%";
+				    }
+				    .mag-anim-loop(@i - 1);
+					}
+					.mag-anim-loop (@iterations);
+
+					// Loop to create the color gradient
+					@color_iterations: 20;
+					.mag-color-loop (@i) when (@i > 0) {
+						@darkening: @i * 5;
+				    .color_mag_@{i} {
+				      stroke: darken(#7bcdbb, @darkening);
+				    }
+				    .mag-color-loop(@i - 1);
+					}
+					.mag-color-loop (@color_iterations);
+
+				}
+			}
+
+			@media @tablet {
+				.leaflet-container {
+					height: 100% ;
+				}
+
+				.leaflet-control-zoom {
+					display: none;
+				}
+				&:not(.fixed) {
+					.interact-wrapper {
+						width: 100%;
+		    		height: 100%;
+					}
+				}
+			}
+
+			.interact-wrapper {
+		    position: absolute;
+		    z-index: 1000;
+		    display: none;
+
+		    @media @tablet { 
+		    	display: block;
+		    }
+
+		    .icon-box {
+		    	cursor: pointer;
+		    	background: white;
+		    	color: black;
+		    	position: absolute;
+		    	top: 10px;
+		    	left: 10px;
+		    	height: 55px;
+		    	width: 55px;
+		    	display: flex;
+		    	justify-content: center;
+		    	align-items: center;
+		    	border-radius: 10px;
+		    	transform-origin: 50% 50%;
+		    	flex-wrap: wrap;
+		    	animation: pulse 2s infinite;
+		    	box-shadow: 2px 2px 2px 2px #ccc;
+
+		    	&.active {
+		    		animation: none;
+		    		background: #666;
+		    		color: white;
+		    	}
+
+		    	span {
+		    		font-family: @med-graphics;
+		    		text-transform: uppercase;
+		    		font-size: 10px;
+		    		padding: 0 10px;
+		    	}
+		    }
+		    
+			}
+
+			.overlay {
+				width: 100%;
+		    height: 100%;
+		    background-color: rgba(0, 0, 0, 0.5);
+		    position: absolute;
+		    z-index: 999;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    pointer-events: none;
+
+		    &.interact-prompt {
+		    	opacity: 0;
+		    }
+
+		    &.fade {
+		    	animation: fadeout 3s;
+		    	pointer-events: none;
+		    }
+
+				.overlay-inner {
+					margin: inherit;
+					background-color: white;
+					border-radius: 10px;
+					width: 300px;
+					box-shadow: 2px 2px 2px;	
+
+					p {
+						line-height: 25px;
+						margin-bottom: 0;
+						font-family: @med-graphics;
+						padding: 15px;
+					}
+				}
+			}
+
+			.leaflet-popup {
+				border-radius: 12px;
+			}
+
+			.leaflet-popup-content {
+				width: 240px;
+				display: flex;
+
+				.quake-near-results {
+					font-size: 16px;
+				}
+
+				p {
+			    padding: 0;
+				}
+
+				img {
+					width: 100%;
+					border-radius: 10px;
+
+					&:not(.populated){
+						display: none;
+					}
+				}
+
+				label.attribution {
+					font-size: 9px;
+
+					&:not(.populated){
+						display: none;
+					}
+				}
+			} 
+
+			& > hr {
+				margin-top: 45px;
+				width: 100%;
+				box-shadow: 2px 2px 2px;
+				margin-bottom: 0;
+			}
+
+			.counter-wrapper {
+				position: absolute;
+				bottom: 10px;
+				left: 10px;
+				padding: 10px;
+				background: rgba(255, 255, 255, 0.8);
+				border-radius: 10px;
+				z-index: 500;
+				font-family: @med-graphics;
+
+				svg {
+					cursor: pointer;
+				}
+
+				.legend {
+					font-size: 13px;
+					text-align: center;
+
+					.map-control {
+						text-transform: uppercase;
+						padding: 2px 4px;
+						border: 2px solid #ccc;
+						margin-bottom: 10px;
+						font-family: @bold-graphics;
+						border-radius: 4px;
+						cursor: pointer;
+
+						&:hover {
+							background-color: #ccc;
+						}
+
+						&.active {
+							background-color: #666;
+							color: white;
+						}
+					}
+
+					@media @mobile {
+						font-size: 12px;
+					}
+
+					.icon-key {	
+						text-align: center;
+						line-height: 15px;
+						font-weight: bold;
+						position: relative;
+				    bottom: 2px;
+
+				    &.below {
+				    	clear: both;
+				    	padding-top: 5px;
+				    }
+					}
+					
+					.gradient-key {
+						clear: both;
+						display: flex;
+						align-items: center;
+
+						span {
+							float: left;
+					    line-height: 20px;	
+					    margin-left: 5px;
+						}
+
+						.first-key {
+							margin-right: 5px;
+						}
+
+						.circle {
+							float: left;
+							border-radius: 136px;
+							border: 1px solid white;
+							background: black;
+
+							@media @mobile {
+								width: 15px;
+								height: 15px;
+							}
+						}
+
+						.circleMax {
+							width: @sizeMax;
+							height: @sizeMax;
+						}
+						.circle6 {
+							width: @size6;
+							height: @size6;
+						}
+						.circle5 {
+							width: @size5;
+							height: @size5;
+						}
+						.circle4 {
+							width: @size4;
+							height: @size4;
+						}
+						.circle3 {
+							width: @size3;
+							height: @size3;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// This needs to be separate so it can affect the map popup and the list
+.quake-item {
+	clear: both;
+	background: white;
+
+	.bigmag {
+		float: left;
+		display: flex;
+		flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin-right: 15px;
+    text-align: center;
+    font-family: @bold-graphics;
+
+    p {
+    	line-height: 0.8;
+    	margin: 0;
+    	padding: 0;
+    }
+
+    .smallword {
+    	font-size: 10px;
+    	line-height: 2.7;
+    	letter-spacing: 1px;
+    	font-family: @bold-graphics;
+    	text-transform: uppercase;
+    }
+	}
+
+	.quake-info{
+		font-size: 14.5px;
+	}
+}
+
+.quakes-list {
+	height: calc(100vh - 288px);
+	border-top: 2px solid #ccc;
+	border-bottom: 2px solid #ccc;
+	overflow-y: scroll;
+	background: white;
+
+	&.fixed {
+		position: fixed;
+		z-index: 100000;
+		background: white;
+	}
+
+	@media (max-width: 979px){
+		display: flex;
+		border-top: 1px solid #ccc;
+		border-bottom: 1px solid #ccc;
+		height: 117px;
+		overflow-y: hidden;
+		overflow-x: scroll;
+	}
+
+	@media @mobile {
+		height: 100px;
+	}
+
+	.quake-item {
+		border-bottom: 1px solid #ccc;
+		padding: 15px 20px;
+		overflow: auto;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #eee;
+			&:after {
+				border-left-color: #eee;
+			}
+		}
+
+		&.active {
+			background-color: #eee;
+			&:after {
+				border-left-color: #eee;
+			}
+		}
+
+		&.alert {
+			background-color: #ffebec;
+			&:after {
+				border-left-color: #ffebec;
+			}
+
+			&:hover {
+				background-color: #ffaeb0;
+				&:after {
+					border-left-color: #ffaeb0;
+				}
+			}
+
+			&.active {
+				background-color: #ffaeb0;
+				&:after {
+					border-left-color: #ffaeb0;
+				}
+			}
+		}
+
+		&:last-child {
+			&:after, &:before {
+				border: none;
+			}
+		}
+
+		.bigmag {
+			border-right: 1px solid #ccc;
+			padding-right: 15px;
+		}
+
+		@media (max-width: 979px){
+			height: 100px;
+			flex: 0 0 250px;
+			position: relative;
+			border: none;
+			overflow: visible;
+			margin-right: 50px;
+			padding: 10px;
+
+			.quake-info{
+				font-size: 12px;
+				width: calc(100% + 10px);
+			}
+
+			.bigmag {
+				height: 100%;
+			}
+
+			&:after, &:before {
+				left: 100%;
+				top: 50%;
+				border: solid transparent;
+				content: " ";
+				height: 0;
+				width: 0;
+				position: absolute;
+				pointer-events: none;
+			}
+
+			&:after {
+				border-color: rgba(136, 183, 213, 0);
+				border-left-color: white;
+				border-width: 50px;
+				margin-top: -50px;
+			}
+			&:before {
+				border-color: rgba(204, 204, 204, 0);
+				border-left-color: #ccc;
+				border-width: 51px;
+				margin-top: -51px;
+			}
+		}
+	}
+}
+
+
+.recent-news-wrapper {
+	text-align:center;
+}
+
+.related-title{
+	margin:1em auto;
+
+}
+
+.related-items{
+	display:flex;
+	max-width: 900px;
+	margin:0 auto;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+.recent-item{
+
+	flex:0 0 30%;
+
+	text-align:left;
+	padding:15px;
+	font-family:@headline-light;
+
+	a{
+		color:#333;
+		line-height: 1.2;
+		font-size: 16px;
+	}
+
+	label{
+		display:block;
+
+		&:hover{
+			cursor: pointer;
+		}
+	}
+
+	img{
+		width:100%;
+	}
+
+	&.no-image{
+
+		.related-deck{
+			font-family:@national-book;
+			font-size: 16px;
+			margin-top:5px;
+		}
+
+		a{
+			font-size: 22px;
+		}
+	}
+
+	@media @mobile{
+		flex:0 0 100%;
+		// border-bottom:1px solid #ccc;
+		padding-bottom:1em;
+		margin:15px 0;
+	}
+}
+
+.timestamp{
+	display: inline-block;
+	font-family:@national-book;
+	text-transform: uppercase;
+	color:#444;
+	font-size: 0.9em;
+
+	@media (max-width: 979px) {
+		font-size: 11px;
+	}
+}
+
+.tablet-bump {
+	@media (max-width: 1280px) {
+		clear: both;
+	}
+}
+
+.mobile-bump {
+	@media @tablet {
+		clear: both;
+	}
+}
+
+hr.mobile-spacer {
+	border: none;
+	display: none;
+	width: 100%;
+	margin-top: 5px;
+
+	@media @tablet {
+		display: block;
+	}
+}
+
+@keyframes pulse {
+  0%   { 
+  	width: 55px;
+  	height: 55px; 
+  	margin: 0px;
+  }
+  50%  { 
+  	width: 50px;
+  	height: 50px; 
+  	margin: 2.5px;
+  }
+  100% { 
+  	width: 55px;
+  	height: 55px; 
+  	margin: 0px;
+  }
+}
+
+@keyframes fadeout {
+  0%   { 
+  	opacity: 1;
+  }
+  50%   { 
+  	opacity: 1;
+  }
+  100% { 
+  	opacity: 0;
+  }
+}
+
+@iterations: 20;
+.magnitude-ripple-loop (@i) when (@i > 0) {
+	@magTitle: ~"mag_@{i}";
+	@keySel: 0% + @i/2;
+	@keySelEnd: 0% + @i/2 + 0.5;
+  @keyframes @magTitle {
+    0%, @{keySel} { opacity: 0 }
+  	@{keySelEnd} { opacity: 1 }
+  }
+  .magnitude-ripple-loop(@i - 1);
+}
+.magnitude-ripple-loop (@iterations);
+
+@keyframes tada{0%{transform:scale(1);transform:scale(1)}10%,20%{transform:scale(.9) rotate(-8deg);transform:scale(.9) rotate(-8deg)}30%,50%,70%{transform:scale(1.3) rotate(8deg);transform:scale(1.3) rotate(8deg)}40%,60%{transform:scale(1.3) rotate(-8deg);transform:scale(1.3) rotate(-8deg)}100%,80%{transform:scale(1) rotate(0);transform:scale(1) rotate(0)}}.faa-parent.animated-hover:hover>.faa-tada,.faa-tada.animated,.faa-tada.animated-hover:hover{animation:tada 2s linear infinite;animation:tada 2s linear infinite}.faa-parent.animated-hover:hover>.faa-tada.faa-fast,.faa-tada.animated-hover.faa-fast:hover,.faa-tada.animated.faa-fast{animation:tada 1s linear infinite;animation:tada 1s linear infinite}.faa-parent.animated-hover:hover>.faa-tada.faa-slow,.faa-tada.animated-hover.faa-slow:hover,.faa-tada.animated.faa-slow{animation:tada 3s linear infinite;animation:tada 3s linear infinite}

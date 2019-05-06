@@ -23,10 +23,9 @@ if (authorString === ""){
 }
 
 // If Tim hasn't been added yet, add his name
-if (authorString.indexOf("Tim O'Rourke") == -1){
+if (authorString.indexOf("Tim O'Rourke") === -1){
 	authorString += ", Tim O'Rourke";
 }
-
 
 // eslint-disable-next-line
 if (typeof HDN === "undefined"){
@@ -41,12 +40,12 @@ if (typeof HDN === "undefined"){
 }
 
 // HDN.dataLayer object for content and href data
-HDN.dataLayer.content.title = `${projectSettings.TITLE}`;
+HDN.dataLayer.content.title = `${projectSettings.SEO_TITLE}`;
 HDN.dataLayer.content.subtitle = "";
 HDN.dataLayer.content.objectId = "";
 HDN.dataLayer.content.objectType = "channel";
 HDN.dataLayer.content.sectionPath = [`${projectSettings.HEARST_CATEGORY}`, 'special projects'];
-HDN.dataLayer.content.pubDate = `${projectSettings.DATE} 00:00:00`;
+HDN.dataLayer.content.pubDate = `${projectSettings.DATE}`;
 HDN.dataLayer.content.wordCount = "";
 HDN.dataLayer.content.keywords = [];
 HDN.dataLayer.content.keySubjects = [];
@@ -72,11 +71,11 @@ HDN.dataLayer.source.publishingSite = "premiumsfgate";
 HDN.dataLayer.source.sourceSite = "sfgate";
 
 // HDN.dataLayer object for sharing information
-HDN.dataLayer.sharing.openGraphUrl = `${projectSettings.URL}/${projectSettings.SLUG}`;
+HDN.dataLayer.sharing.openGraphUrl = `${projectSettings.URL}/${projectSettings.SUBFOLDER}/${projectSettings.SLUG}/`;
 HDN.dataLayer.sharing.openGraphType = "article";
 
-HDN.dataLayer.href.pageUrl = `${projectSettings.URL}/${projectSettings.SLUG}`;
-HDN.dataLayer.href.canonicalUrl = `${projectSettings.URL}/${projectSettings.SLUG}`;
+HDN.dataLayer.href.pageUrl = `${projectSettings.URL}/${projectSettings.SUBFOLDER}/${projectSettings.SLUG}/`;
+HDN.dataLayer.href.canonicalUrl = `${projectSettings.URL}/${projectSettings.SUBFOLDER}/${projectSettings.SLUG}/`;
 // EXTRA WINDOW-REFS REMOVED HERE AND ADDED IN _DOCUMENT.JS
 
 // HDN.dataLayer object for presentation information

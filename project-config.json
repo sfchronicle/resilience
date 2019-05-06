@@ -1,26 +1,33 @@
 {
   "_comment": "The possible paywall values are 'meter' (wall after 5), 'paywall' (wall immediately), or 'free' (no wall)",
   "PAYWALL_SETTING": "meter",
-  "EMBEDDED": "false",
+  "EMBEDDED": false,
   "GOOGLE_SHEETS": [],
   "GOOGLE_DOCS": [],
   "PROJECT": {
     "_comment": "IMPORTANT: SUBFOLDER and SLUG for used for file pathing and the deploy script! Take care with your edits to them! NOTE: Stage deploys will automatically go to 'test-proj'",
-    "SUBFOLDER": "2019",
-    "SLUG": "resilience",
-
-    "TITLE": "",
-    "URL": "https://projects.sfchronicle.com",
-    "IMAGE": "",
-    "DESCRIPTION": "",
-    "TWITTER_TEXT": "Some social text",
+    "SUBFOLDER": "trackers",
+    "SLUG": "earthquakes",
+    "DISPLAY_HEADLINE": "Quake Tracker",
+    "IMAGE": "https://s.hdnux.com/photos/75/62/32/17243022/4/rawImage.jpg",
+    "SEO_TITLE": "Earthquake Tracker: The latest quakes in California and across the world",
+    "SOCIAL_TITLE": "Earthquake Tracker: The latest quakes in California and across the world in real time",
+    "DESCRIPTION": "See significant earthquakes that have occurred in the past 30 days in real time, focusing on epicenters in California.",
+    "TWITTER_TEXT": "Earthquake Tracker: See the latest quakes in California and across the world in real time",
     "HEARST_CATEGORY": "news", 
-    "DATE": "January 1, 1970 6:00 p.m.",
+    "DATE": "April 18, 2019 4:00 a.m.",
+    "MOD_DATE": "",
     "AUTHORS": [
       {
-        "AUTHOR_NAME": "Interactives Team",
-        "AUTHOR_PAGE": "https://www.sfchronicle.com/newsroom_contacts/"
+        "AUTHOR_NAME": "Evan Wagstaff",
+        "AUTHOR_PAGE": "https://www.sfchronicle.com/author/evan-wagstaff/"
+      },
+      {
+        "AUTHOR_NAME": "Lucio Villa",
+        "AUTHOR_PAGE": "https://www.sfchronicle.com/author/lucio-villa/"
       }
-    ]
+    ],
+    "URL": "https://projects.sfchronicle.com",
+    "HEARST_CATEGORY": "news"
   }
 }

@@ -19,23 +19,18 @@ import "../styles/project.less";
 
 // Enable Font Awesome! 
 import { library, config } from '@fortawesome/fontawesome-svg-core';
-import { faChevronDown, faEnvelope} from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faEnvelope, faClock, faTimes, faHandPointer, faGlobe} from '@fortawesome/free-solid-svg-icons';
 import { faFacebook, faTwitter, faLinkedin, faInstagram } from '@fortawesome/free-brands-svg-icons';
 config.autoAddCss = true;
 // For optimization we import the individual solids we use into the library 
-library.add(faFacebook, faTwitter, faLinkedin, faInstagram, faChevronDown, faEnvelope);
+library.add(faFacebook, faTwitter, faLinkedin, faInstagram, faChevronDown, faEnvelope, faClock, faTimes, faHandPointer, faGlobe);
 
 // Bring in moment to handle dates
 let moment = require('moment');
 
 // Get data from config
 let projectConfig = require("../../project-config.json");
-
-//Determine if embedded
-let embedded = false;
-if (projectConfig.EMBEDDED === "true" || projectConfig.EMBEDDED === true){
-  embedded = true;
-}
+let project = projectConfig.PROJECT;
 
 // eslint-disable-next-line
 var HDN = {};
@@ -55,10 +50,10 @@ class Layout extends Component {
 
   computerizeDates () {
     // Convert date to computer-readable time
-    this.computerPubDate = moment(projectConfig.PROJECT.DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ");
+    this.computerPubDate = moment(project.DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ");
     // Check safely for MOD_DATE
-    if (typeof projectConfig.PROJECT.MOD_DATE !== "undefined"){
-      this.computerModDate = moment(projectConfig.PROJECT.MOD_DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ");
+    if (project.MOD_DATE){
+      this.computerModDate = moment(project.MOD_DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ");
     } else {
       // If MOD_DATE does not exist, set var to pubdate
       this.computerModDate = this.computerPubDate;
@@ -92,6 +87,9 @@ class Layout extends Component {
 
     return (
       <Fragment>
+        <Helmet htmlAttributes={{
+          lang: 'en',
+        }} />
         {/* Forcing HDN vars in so we can feed them to ensighten */}
         <Helmet script={[{ 
           type: 'text/javascript', 
@@ -104,14 +102,14 @@ class Layout extends Component {
           <link rel="shortcut icon" href="https://www.sfchronicle.com/favicon.ico" type="image/x-icon" />
 
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content={ this.props.title } />
+          <meta name="twitter:title" content={ this.props.social_title } />
           <meta name="twitter:site" content="@sfchronicle" />
           <meta name="twitter:url" content={ this.props.url } />
           <meta name="twitter:image" content={ this.props.image } />
           <meta name="twitter:description" content={ this.props.description } />
 
           <meta property="og:type" content="article" />
-          <meta property="og:title" content={ this.props.title } />
+          <meta property="og:title" content={ this.props.social_title } />
           <meta property="og:site_name" content="The San Francisco Chronicle" />
           <meta property="og:url" content={ this.props.url } />
           <meta property="og:image" content={ this.props.image } />
@@ -144,28 +142,33 @@ class Layout extends Component {
             },
             "description": "${this.props.description}"
           }`}</script>
+          
+          {/* Need jQuery for treg */}
+          { env !== "app" && 
+            <script src="https://projects.sfchronicle.com/shared/js/jquery.min.js"></script>
+          } 
 
           {/* Only needed if this is an embed on some page */}
-          { embedded && 
+          { projectConfig.EMBEDDED && 
             <script src="https://projects.sfchronicle.com/shared/js/responsive-child.js"></script>
           } 
 
-          {/* Add jQuery for treg to use ... sigh */}
-          { (!embedded && env !== "app") &&
-            <script src="https://projects.sfchronicle.com/shared/js/jquery.min.js"></script>
-          }
-
-          {/* Exclude login logic from embeds and the app */}
-          { (!embedded && env !== "app") &&
+          {/* Exclude login logic from the app */}
+          { env !== "app" &&
             <script src="https://treg.hearstnp.com/treg.js"></script>
           }
 
           {/* Always include GA and Chartbeat */}
           <script src="https://nexus.ensighten.com/hearst/news/Bootstrap.js"></script>
           
-          {/* Exclude subscribe logic from embeds and the app */}
-          { (!embedded && env !== "app") &&
+          {/* Exclude subscribe logic from the app */}
+          { env !== "app" &&
             <script src="https://cdn.blueconic.net/hearst.js"></script>
+          }
+
+          {/* Add the app swap script */}
+          { env !== "app" &&
+            <script src="https://projects.sfchronicle.com/shared/js/app-redirect.js"></script>
           }
 
         </Helmet>
@@ -175,13 +178,8 @@ class Layout extends Component {
         {this.props.children}
 
         {/* Include footer unless it's embedded or the app version: */}
-        { (!embedded && env !== "app") &&
+        { (!projectConfig.EMBEDDED && env !== "app") &&
           <Footer />
-        }
-
-        {/* Redirect to the app version if this is not app and we're on Richie */}
-        { (!embedded && env !== "app") &&
-          <script src="https://projects.sfchronicle.com/shared/js/app-redirect.js" async></script>
         }
       </Fragment>
     )
@@ -193,12 +191,13 @@ Layout.propTypes = {
 }
 
 Layout.defaultProps = {
-  description: projectConfig.PROJECT.DESCRIPTION,
+  description: project.DESCRIPTION,
   paywall: projectConfig.PAYWALL,
-  image: projectConfig.PROJECT.IMAGE,
-  title: projectConfig.PROJECT.TITLE,
-  url: `https://projects.sfchronicle.com/${ projectConfig.PROJECT.SUBFOLDER }/${ projectConfig.PROJECT.SLUG }/`,
-  authors: projectConfig.PROJECT.AUTHORS
+  image: project.IMAGE,
+  title: project.SEO_TITLE,
+  social_title: project.SOCIAL_TITLE,
+  url: `https://projects.sfchronicle.com/${ project.SUBFOLDER }/${ project.SLUG }/`,
+  authors: project.AUTHORS
 };
 
 export default Layout;

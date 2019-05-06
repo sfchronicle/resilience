@@ -81,11 +81,6 @@ else
 	deploy_type="auto"
 fi
 
-if [ $deploy_type != "auto" ]; then
-	# Kill the existing dev process if it's running or else it will get hosed
-	kill "$(lsof -t -i :8000)"
-fi
-
 slug=$(node -pe 'JSON.parse(process.argv[1]).PROJECT.SLUG' "$(cat project-config.json)")
 
 if [ -z "$slug" ]; then
@@ -134,6 +129,8 @@ if [ -d "/Volumes/SFGextras/Projects/" ]; then
 		  	# Make auto deploy wait for full completion, or else files will be deleted too soon
 		  	cp -a public_export/. "/Volumes/SFGextras/Projects/temp-deploy/$subfolder/$slug"
 		  else
+		  	# Put the rebuild for dev into a subshell so we don't hear about it
+		  	(gatsby build >/dev/null &)
 		  	# Manual deploys get cool spinner
 		  	cp -a public_export/. "/Volumes/SFGextras/Projects/temp-deploy/$subfolder/$slug" &
 		  	spinner
@@ -149,7 +146,8 @@ if [ -d "/Volumes/SFGextras/Projects/" ]; then
 		  mv "/Volumes/SFGextras/Projects/temp-deploy/$subfolder/$slug" "/Volumes/SFGextras/Projects/$subfolder/$slug"
 		  echo -e "${GREEN}DEPLOY COMPLETE.${NC} Exiting..."
 		else 
-			echo "INFO: User cancelled deployment. Exiting..."
+			echo "INFO: User cancelled deployment. Exiting and rebuilding for dev..."
+			gatsby build >/dev/null
 		fi
   else
 		# We couldn't access subfolder

@@ -6,7 +6,7 @@ class CreditLine extends Component {
     return (
       <p>{this.props.name}
       {this.props.email &&
-      	<span>&nbsp;• <a href={`mailto:${ this.props.email } `}>{ this.props.email.toLowerCase() }</a> </span>
+      	<span>&nbsp;• <a href={`mailto:${ this.props.email } `}>{ this.props.email.toLowerCase()  }</a> </span>
       }
       {this.props.twitter &&
       	<span>&nbsp;• <a target="_blank" rel="noopener noreferrer" href={`https://twitter.com/${ this.props.twitter } `}>@{ this.props.twitter }</a></span>
