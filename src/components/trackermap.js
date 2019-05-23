@@ -233,7 +233,7 @@ export default class TrackerMap extends Component {
   // We need to preload or else the bounds will be wonky for a sec
   preloadImage(bounds, size){
     const img = new Image();
-    img.src = 'http://egis.fire.ca.gov/arcgis/rest/services/FRAP/FHSZ/MapServer/export?dpi=96&transparent=true&format=png32&bbox='+bounds._northEast.lng+'%2C'+bounds._northEast.lat+'%2C'+bounds._southWest.lng+'%2C'+bounds._southWest.lat+'&bboxSR=4326&imageSR=4326&size='+size.x+'%2C'+size.y*0.8+'&f=image';
+    img.src = 'http://egis.fire.ca.gov/arcgis/rest/services/FRAP/FHSZ/MapServer/export?dpi=96&transparent=true&format=png32&bbox='+bounds._northEast.lng+'%2C'+bounds._northEast.lat+'%2C'+bounds._southWest.lng+'%2C'+bounds._southWest.lat+'&bboxSR=4326&imageSR=102100&size='+size.x+'%2C'+size.y+'&f=image';
     img.onload = () => {
       this.setState({
         firesUrl: img.src
