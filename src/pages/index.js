@@ -29,12 +29,31 @@ const env = process.env.GATSBY_DEPLOY_ENV;
 export default class IndexPage extends PureComponent {
   constructor() {
     super();
+    this.state = {
+      layer: null
+    }
 
     this.map = React.createRef();
+    this.timeout = null;
   }
 
   componentDidMount() {
-    
+    this.timeout = setTimeout(() => {
+      this.setState({
+        layer: "fires"
+      })
+    }, 3000)
+  }
+
+  setLayer(type){
+    // Set type of layer for map
+    this.setState({
+      layer: type
+    });
+    // Clear timeout if it's ticking
+    if (this.timeout !== null){
+      clearTimeout(this.timeout);
+    }
   }
 
   panToQuake(e, lat, lng, index){
@@ -111,6 +130,7 @@ export default class IndexPage extends PureComponent {
                   </div>
                 </a>
 
+                <p className="label-text">From The Chronicle Opinion Staff</p>
                 <h1>{project.DISPLAY_HEADLINE}</h1>
 
                 <div className="social-box">
@@ -133,9 +153,7 @@ export default class IndexPage extends PureComponent {
                   </div>
                 </div>
 
-  							<p className="instructions">This map highlights the risk areas in California for four major natural disasters: earthquakes, fires, floods and landslides. Enter your address to see which zones impact your home.</p>
-            
-                  <p className="byline"><span>By</span>
+                <p className="byline"><span>By</span>
                   { projectConfig.PROJECT.AUTHORS.map((author, index) => {
                     // Pass special flag if this is the last item
                     let isLast = false;
@@ -150,21 +168,35 @@ export default class IndexPage extends PureComponent {
                     <Fragment>
                       &nbsp;|&nbsp;<time className="dateline mod-date" dateTime={ moment(projectConfig.PROJECT.MOD_DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="dateModified">Updated: { moddateString }</time>
                     </Fragment>
-                  }</p>
+                }</p>
+
+  							<p className="instructions">This map highlights the risk areas in California for three major natural disasters: earthquakes, fires and floods. Select a layer to see the risk areas.</p>
+
+                <div className="layer-text">
+                  <p className={this.state.layer === "fires" ? "instructions show" : "instructions"}>Climate change will bring more and more wildfires through residential areas. The best way to fight them begins before your neighborhood is at risk.<br /><br /><a href="" target="_blank">Lessons from Santa Rosa &raquo;</a></p>
+                  <p className={this.state.layer === "quakes" ? "instructions show" : "instructions"}>There's a 72% probability that a major earthquake will strike the Bay Area by 2043. Here's what your community should do right now.<br /><br /><a href="" target="_blank">Lessons from San Francisco &raquo;</a></p>
+                  <p className={this.state.layer === "floods" ? "instructions show" : "instructions"}>Tens of thousands of Bay Area homes may experience chronic flooding as sea levels rise. What one city learned when it happened to them in 2017.<br /><br /><a href="" target="_blank">Lessons from San Jose &raquo;</a></p>
+                </div>
+
+
 
               </div>
             </div>
 
-            {/* Quake map here */}
-
-            <TrackerMap ref={this.map} startLat={37.8044} startLng={-122.2711} />
+            <TrackerMap ref={this.map} startLat={37.8044} startLng={-122.2711} chosenLayer={this.state.layer} setLayer={this.setLayer.bind(this)} />
 
           </div>
 
-
           <div className="article">
             {docData.mainbar.map((item) => {
-              return <p>{item.value}</p>
+              if (item.type === "text"){
+                return <p dangerouslySetInnerHTML={{__html: item.value}}></p>
+              } else if (item.type === "callout"){
+                return <span className="big-letter">{item.value.number}</span>
+              } else if (item.type === "dropcap"){
+                return <span className="bigger-letter">{item.value.letter}</span>
+              }
+              
             })}
           </div>
 
@@ -172,25 +204,15 @@ export default class IndexPage extends PureComponent {
             <RecentNews />
           }
 
-          <hr className="about-border" />
-
-          <h2>About the data</h2>
-
-          <p className="description-text">The Quake Tracker displays quakes from the past 30 days with magnitudes above 3.0 in Northern California, 4.0 in Southern California, 5.0 in the United States, and 7.0 anywhere in the world. Quakes below magnitude 3.0 are often not felt and do not appear on this map.</p>
-
-          {/*
-          <p className="description-text">The fault layer only shows faults in and around California that have experienced a surface rupture in the last 150 years. There are many more historical faults not shown on this map.</p>
-          */}
-
-          <p className="description-text">All data in this project comes from the U.S. Geological Survey. Visit the agency’s site to opt into its <a href="https://earthquake.usgs.gov/ens/" target="_blank" rel="noopener noreferrer">Earthquake Notification Service.</a></p>
-
           <hr/>
 
           <div id="credits">
             <h2>Credits</h2>
-            <Credits type="Newsroom Developers">
+            <Credits type="Newsroom Developer">
               <CreditLine name="Evan Wagstaff" email="Evan.Wagstaff@sfchronicle.com" twitter="evanwagstaff" />
-              <CreditLine name="Lucio Villa" email="LVilla@sfchronicle.com" twitter="luciovilla" />
+            </Credits>
+            <Credits type="Executive Producer">
+              <CreditLine name="Brittany Schell" email="BSchell@sfchronicle.com" twitter="brittlynns" />
             </Credits>
             <Credits type="Managing Editor, Enterprise">
               <CreditLine name="Michael Gray" email="mgray@sfchronicle.com" twitter="GrayMikeG" />

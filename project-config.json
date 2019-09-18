@@ -7,8 +7,8 @@
   "PROJECT": {
     "_comment": "IMPORTANT: SUBFOLDER and SLUG for used for file pathing and the deploy script! Take care with your edits to them! NOTE: Stage deploys will automatically go to 'test-proj'",
     "SUBFOLDER": "2019",
-    "SLUG": "defending-against-disaster",
-    "DISPLAY_HEADLINE": "Defending Against Disaster",
+    "SLUG": "california-danger-zones",
+    "DISPLAY_HEADLINE": "California Danger Zones",
     "IMAGE": "https://s.hdnux.com/photos/75/62/32/17243022/4/rawImage.jpg",
     "SEO_TITLE": "Earthquake Tracker: The latest quakes in California and across the world",
     "SOCIAL_TITLE": "Earthquake Tracker: The latest quakes in California and across the world in real time",
@@ -20,7 +20,7 @@
     "AUTHORS": [
       {
         "AUTHOR_NAME": "Caille Millner",
-        "AUTHOR_PAGE": "https://www.sfchronicle.com/"
+        "AUTHOR_PAGE": "https://www.sfchronicle.com/author/caille-millner/"
       }
     ],
     "URL": "https://projects.sfchronicle.com",

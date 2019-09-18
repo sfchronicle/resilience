@@ -13,6 +13,30 @@ body.noscroll, html.noscroll {
 	overflow: hidden;
 }
 
+p.label-text {
+	color: @redlink;
+	text-transform: uppercase;
+	font-family: @block-graphics;
+	letter-spacing: 0.05em;
+	text-align: center;
+	font-size: 14px !important;
+	margin-bottom: 0;
+	margin-top: 15px;
+}
+
+.big-letter, .bigger-letter {
+	float: left;
+  font-size: 50px;
+  line-height: 1;
+  margin: 0 10px 10px 0;
+  font-family: @headline-bold;
+}
+
+.bigger-letter {
+	font-size: 100px;
+  line-height: 0.5;
+}
+
 body #project-wrapper {
 	margin-top: 0;
 
@@ -89,7 +113,7 @@ body #project-wrapper {
 
 			h1 {
 				margin:0;
-				font-size: 42px;
+				font-size: 52px;
 				font-family: @headline-bold;
 
 				@media @tablet {
@@ -116,6 +140,20 @@ body #project-wrapper {
 
 					#recent-report {
 						font-family: @block-graphics;
+					}
+				}
+			}
+
+			.layer-text {
+				position: relative;
+
+				.instructions {
+					position: absolute;
+					opacity: 0;
+					transition: opacity 0.2s;
+
+					&.show {
+						opacity: 1;
 					}
 				}
 			}
@@ -254,6 +292,75 @@ body #project-wrapper {
 				}
 			}
 
+			.legend {
+		    position: absolute;
+		    z-index: 999;
+		    top: 0;
+		    left: 0;
+		    right: 0;
+		    bottom: 0;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    background-color: rgba(0, 0, 0, 0.8);
+
+		    .legend-box {
+		    	background-color: white;
+		    	border-radius: 4px;
+		    	margin: 15px;
+		    	padding: 30px 15px 15px;
+		    	position: relative;
+		    	font-family: @med-graphics;
+		    	font-size: 16px;
+		    	line-height: 1.2;
+
+		    	span {
+		    		font-family: @block-graphics;
+
+		    		&.green {
+		    			color: #60a288;
+		    		}
+
+		    		&.red {
+		    			color: #fc2f2c;
+		    		}
+
+		    		&.darkred {
+		    			color: #fc616a;
+		    		}
+
+		    		&.lightred {
+		    			color: #f9d1d0;
+		    		}
+
+		    		&.orange {
+		    			color: #f6dca8;
+		    		}
+
+		    		&.yellow {
+		    			color: #f0f19e;
+		    		}
+
+		    		&.heavyflood {
+		    			color: #d20915;
+		    		}
+
+		    		&.lightflood {
+		    			color: #feea5f;
+		    		}
+		    	}
+
+		    	.legend-close {
+			    	position: absolute;
+			    	top: 0px;
+			    	right: 0px;
+			    	padding: 10px;
+			    	cursor: pointer;
+			    	line-height: 0;
+			    }
+		    }
+		  }
+
 			.interact-wrapper {
 		    position: absolute;
 		    z-index: 1000;
@@ -384,13 +491,33 @@ body #project-wrapper {
 				z-index: 500;
 				font-family: @med-graphics;
 
+				// @media (max-width: 979px) {
+				// 	right: 0;
+				// 	left: 0;
+				// 	bottom: 0;
+				// }
+
 				svg {
 					cursor: pointer;
 				}
 
-				.legend {
+				.key {
+					text-align: center;
+					font-size: 14px;
+					text-transform: uppercase;
+					letter-spacing: 0.02em;
+					font-family: @block-graphics;
+					cursor: pointer;
+
+					&:hover {
+						opacity: 0.7;
+					}
+				}
+
+				.actions {
 					font-size: 13px;
 					text-align: center;
+					max-width: 150px;
 
 					.map-control {
 						text-transform: uppercase;
@@ -428,6 +555,7 @@ body #project-wrapper {
     					cursor: pointer;
     					font-weight: bold;
     					font-size: 16px;
+    					transition: background 0.2s;
 
     					&:hover {
     						background: #ddd;
@@ -453,54 +581,7 @@ body #project-wrapper {
 				    }
 					}
 					
-					.gradient-key {
-						clear: both;
-						display: flex;
-						align-items: center;
 
-						span {
-							float: left;
-					    line-height: 20px;	
-					    margin-left: 5px;
-						}
-
-						.first-key {
-							margin-right: 5px;
-						}
-
-						.circle {
-							float: left;
-							border-radius: 136px;
-							border: 1px solid white;
-							background: black;
-
-							@media @mobile {
-								width: 15px;
-								height: 15px;
-							}
-						}
-
-						.circleMax {
-							width: @sizeMax;
-							height: @sizeMax;
-						}
-						.circle6 {
-							width: @size6;
-							height: @size6;
-						}
-						.circle5 {
-							width: @size5;
-							height: @size5;
-						}
-						.circle4 {
-							width: @size4;
-							height: @size4;
-						}
-						.circle3 {
-							width: @size3;
-							height: @size3;
-						}
-					}
 				}
 			}
 		}

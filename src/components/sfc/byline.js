@@ -15,14 +15,16 @@ class Byline extends Component {
 
     return (
       <Fragment>
-      	{ (this.props.url) ? (
+        { (this.props.url) ? (
             <Fragment>
               {prefix}
-              <span>{this.props.name}</span>
+              <a target="_blank" rel="author noopener noreferrer" href={this.props.url}>
+                <span>{this.props.name}</span>
+              </a>
             </Fragment>
-        	) : (
-        		<span>{prefix}{this.props.name}</span>
-        	)
+          ) : (
+            <span>{prefix}{this.props.name}</span>
+          )
         }
       </Fragment>
     );
@@ -30,4 +32,4 @@ class Byline extends Component {
 }
 export default Byline;
 
-		
+    

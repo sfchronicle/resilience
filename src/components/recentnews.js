@@ -39,7 +39,7 @@ export default class RecentNews extends PureComponent {
       return (
         <div className="recent-news-wrapper">
   
-          <h2 className="related-title">Recent Earthquake News</h2>
+          <h2 className="related-title">More about each risk</h2>
 
           <div className="related-items">
     

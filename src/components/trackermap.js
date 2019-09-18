@@ -18,9 +18,9 @@ const images = (ctx => {
 if (typeof window !== 'undefined') {
 	var L = require('leaflet');
 } 
-var {Map, TileLayer, Marker, Popup, Tooltip, GeoJSON, ImageOverlay, Pane} = require('react-leaflet');
+var {Map, TileLayer, ImageOverlay, Pane} = require('react-leaflet');
 
-var geodist = require('geodist')
+var faultsSVG = require("../data/sfc/historical_faults.svg");
 
 export default class TrackerMap extends Component {
   constructor(props) {
@@ -30,30 +30,17 @@ export default class TrackerMap extends Component {
       wipeMap: true, // The marker cluster glitch when swapping data, so we need to wipe them
       interact: true,
       mapCenter: [this.props.startLat, this.props.startLng],
-      showFaults: false,
-      geolocating: "",
-      userPos: null,
+      legendOpen: false,
       nearbyLanguage: "",
-      layer: "fires", // What to show on map
       firesUrl: false,
       bounds: {_northEast: "", _southWest: ""}
     }
 
     this.map = React.createRef();
     this.interactPrompt = React.createRef();
-    this.popImg = React.createRef();
-    this.popup = React.createRef();
-    this.currentVal = -1;
     this.interactTimeout = null;
     this.isMobile = false;
-    this.maxMagnitude = 0;
-    this.markerRefs = {};
     this.moving = false;
-
-    // Create a ref for each marker
-   	for (let quake in this.props.quakes){
-   		this.markerRefs['marker' + quake] = React.createRef();
-   	}
 
   }
 
@@ -84,28 +71,6 @@ export default class TrackerMap extends Component {
     
   }
 
-  handleShowFaults(){
-  	// Reveal the fault layer
-  	this.setState({
-  		showFaults: true
-  	})
-  }
-
-  handleHideFaults(){
-  	// Just hide them
-  	this.setState({
-  		showFaults: false
-  	})
-  }
-
-  convertDatesToAP (dateString) {
-  	// Convert date string to AP style abbreviations
-  	let newDateString = dateString;
-  	newDateString = newDateString.replace('January', 'Jan.').replace('February', 'Feb.').replace('August', 'Aug.').replace('September', 'Sept.').replace('October', 'Oct.').replace('November','Nov.').replace('December','Dec.');
-  	// Return the result
-  	return newDateString;
-  }
-
   freezeBody(innerElement){
   	// Save scrollTop value
 		this.scroll = document.documentElement.scrollTop;
@@ -132,33 +97,6 @@ export default class TrackerMap extends Component {
 		document.documentElement.scrollTop = document.body.scrollTop = this.scroll;
   }
 
-  panToQuake(lat, lng, keyIndex) {
-  	if (this.moving){
-  		// Refuse to act if we're in transit already
-  		return false;
-  	} else {
-  		let thisMap = this.map.current.leafletElement;
-  		if (Math.abs(thisMap.getCenter().lat - lat) > 0.01 && Math.abs(thisMap.getCenter().lng - lng) > 0.01){
-  			this.moving = true;
-  			// We need to pan the map -- do it
-		    this.setState({
-		  		mapCenter: [lat, lng]
-		  	});
-				// Waits until pan complete to open
-		    setTimeout(() => {
-		  		this.markerRefs['marker' + keyIndex].current.leafletElement.openPopup();
-		  		// Allow next move
-		  		this.moving = false;
-		    }, 400);
-  		} else {
-  			// It's not far enough for a pan, just show the popup
-  			this.markerRefs['marker' + keyIndex].current.leafletElement.openPopup();
-	  		// Allow next move
-	  		this.moving = false;
-  		}
-  	}
-  }
-
   handleInteract(e){
   	e.preventDefault();
   	e.stopPropagation();
@@ -169,11 +107,6 @@ export default class TrackerMap extends Component {
   		this.interactPrompt.current.classList.remove('fade');
   	} else {
   		this.unfreezeBody(this.map);
-  	}
-
-  	// If this is mobile, send adjustment to parent too
-  	if (this.isMobile){
-  		this.props.adjustQuakeNav(!this.state.interact);
   	}
 
   	this.setState({
@@ -209,27 +142,7 @@ export default class TrackerMap extends Component {
   	}
   }
 
-  getStyle(feature, layer) {
-    // Set style defaults
-    let defaults = {
-      // color: '#006400',
-      weight: 5,
-      opacity: 0.5,
-      //fill: '#006400',
-    }
-
-    // Get magnitude if it exists
-    let thisMagnitude = feature.properties.value;
-    console.log(thisMagnitude, feature);
-    // If a match is found, make the variable simple
-    if (thisMagnitude){
-      // Set className by magnitude (the CSS classes handle most of the visual work)
-      defaults['className'] = "quake-contour color_mag_" + (thisMagnitude*2) + " magnitude_anim_" + ((this.maxMagnitude - thisMagnitude + 1)*2);
-    }
-
-    return defaults;
-  }
-
+  
   // We need to preload or else the bounds will be wonky for a sec
   preloadImage(bounds, size){
     const img = new Image();
@@ -277,66 +190,7 @@ export default class TrackerMap extends Component {
 
   setLayer(type){
     // Set type of layer for map
-    this.setState({
-      layer: type
-    });
-  }
-
-  getUserPosition(position){
-    let userLat = position.coords.latitude;
-    let userLng = position.coords.longitude;
-    // Create ref for user pos
-    this.markerRefs["markerme"] = React.createRef();
-    // Compare distances
-    let nearbyQuakes = 0;
-    let maxDistance = 10;
-    let additionalLanguage = "";
-    this.props.quakes.forEach((item) => {
-		  let distance = geodist({lat:userLat, lon:userLng}, {lat:item.lat, lon:item.long});
-		  //If distance is closer than max, add it to nearby quakes
-		  if (distance < maxDistance){
-		  	nearbyQuakes++;
-		  	// Surface first nearby quake within the hour
-		  	if (!additionalLanguage && moment(item.time).isAfter(moment().subtract(1, "hours"))){
-		  		additionalLanguage = " You might have felt the quake at <strong>" + moment(item.time).format("h:mm A").replace("AM", "a.m.").replace("PM", "p.m.") + " " + item.prox_place + "</strong>. Consider filing a <a href='https://earthquake.usgs.gov/earthquakes/eventpage/"+item.id+"/tellus' target='_blank' rel='noopener noreferrer'>Did You Feel It report</a> with USGS."
-		  	}
-		  }
-		});
-
-		let quakeLanguage = "There have been <strong>" + nearbyQuakes + " quakes</strong> within " + maxDistance + " miles of your location in the last 30 days.";
-		if (nearbyQuakes === 1){
-			quakeLanguage = "There has been <strong>" + nearbyQuakes + " quake</strong> within " + maxDistance + " miles of your location in the last 30 days.";
-		}
-
-		// Tack on super recent nearby quake if there was one
-		quakeLanguage += additionalLanguage;
-
-    // Set state with user position
-    this.setState({
-    	userPos: [userLat, userLng],
-    	nearbyLanguage: quakeLanguage
-    });
-
-    // Pan the map over to the new point
-    this.panToQuake(userLat, userLng, "me");
-  }
-
-  handleGeolocate(){
-  	// Start the search
-  	this.setState({
-  		geolocating: "searching"
-  	})
-  }
-
-  handleRelocate(){
-  	// Pan the map over to the new point (if we have the right state)
-  	let userPos = this.state.userPos;
-  	if (userPos){
-  		this.panToQuake(userPos[0], userPos[1], "me");
-  		this.setState({
-  			mapCenter: [userPos[0], userPos[1]]
-  		});
-  	}
+    this.props.setLayer(type);
   }
 
 	render () {
@@ -354,48 +208,52 @@ export default class TrackerMap extends Component {
 					<div className={wrapperClass}>
 					
 						<div className="counter-wrapper">
-							<div className="legend">
-								{/* this.state.geolocating === "" ? (
-									<div className="map-control" onClick={this.handleGeolocate.bind(this)}>
-										<span>Quakes near me</span>
-									</div>
-								) : (
-									<div className={this.state.userPos ? "map-control active" : "map-control"} onClick={this.handleRelocate.bind(this)}>
-										<Geolocate onSuccess={(position) => this.getUserPosition(position)} onError={(error) => this.trackError(error)}  />
-									</div>
-								)*/}
-                {/*
-								{ !this.state.showFaults ? (
-									<div className="map-control" onClick={this.handleShowFaults.bind(this)}>
-										<span>Show fault lines</span>
-									</div>
-								) : (
-									<div className="map-control active" onClick={this.handleHideFaults.bind(this)}>
-										<span>Hide fault lines</span>
-									</div>
-								)}
-                */}
+							<div className="actions">
 								<div className="icon-key">
 									Show danger zones for
 								</div>
                 <div className="option-box">
-                  <div className={this.state.layer == "fires" ? "option active" : "option"} onClick={(type) => this.setLayer("fires")}>Fires</div>
-                  <div className={this.state.layer == "quakes" ? "option active" : "option"} onClick={(type) => this.setLayer("quakes")}>Quakes</div>
-                  <div className={this.state.layer == "floods" ? "option active" : "option"} onClick={(type) => this.setLayer("floods")}>Floods</div>
+                  <div className={this.props.chosenLayer === "fires" ? "option active" : "option"} onClick={(type) => this.setLayer("fires")}>Fires</div>
+                  <div className={this.props.chosenLayer === "quakes" ? "option active" : "option"} onClick={(type) => this.setLayer("quakes")}>Quakes</div>
+                  <div className={this.props.chosenLayer === "floods" ? "option active" : "option"} onClick={(type) => this.setLayer("floods")}>Floods</div>
                 </div>
-                {/*
-								<div className="gradient-key">
-									<span className="first-key">3</span>
-									<div className="circle circle3"></div>
-									<div className="circle circle4"></div>
-									<div className="circle circle5"></div>
-									<div className="circle circle6"></div>
-									<div className="circle circleMax"></div>
-									<span className="last-key">7+</span>
-								</div>
-                */}
 							</div>
+              <div className="key" onClick={() => {
+                this.setState({
+                  legendOpen: true
+                });
+              }}>
+                <FontAwesomeIcon icon="hand-pointer" /> Show legend
+              </div>
 						</div>
+
+            {this.state.legendOpen &&
+              <div className="legend" onClick={(e) => {
+                  this.setState({
+                    legendOpen: false
+                  });
+                }}>
+                <div className="legend-box" onClick={(e) => {
+                  e.stopPropagation();
+                }}>
+                  <div className="legend-close" onClick={() => {
+                    this.setState({
+                      legendOpen: false
+                    });
+                  }}><FontAwesomeIcon icon="times" /></div>
+                  {this.props.chosenLayer === "quakes" &&
+                    <p>Most of the Bay Area is at risk for a major earthquake. The <span className="red">red lines</span> on this map represent the fault lines that have seen evidence of seismic activity in the past 150 years and are likely to cause another earthquake. Areas <span className="green">highlighted in green</span> have been designated by the California Geological Survey as liquefaction zones. They are at increased risk for shaking and structural damage during an earthquake.</p>
+                  }
+                  {this.props.chosenLayer === "fires" &&
+                    <p>Cal Fire ranks areas of California by Fire Hazard Severity Zones (FHSZ) based on fuels, weather conditions, terrain and potential damage to buildings and infrastructure. The <span className="darkred">darkest red</span> are very high FHSZ that fall under local jurisdiction. The other colors represent <span className="lightred">very high</span>, <span className="orange">high</span> and <span className="yellow">moderate</span> FHSZ that are under state control.</p>
+                  }
+                  {this.props.chosenLayer === "floods" &&
+                    <p>This map shows NOAA's Coastal Flood Hazard Composite rating, which scales from <span className="heavyflood">most impacted</span> to <span className="lightflood">least impacted</span>. The composite data includes risks of high tide flooding, annual flooding, sea level rise scenarios and tsunami run-up zones. The gray areas have not yet been assessed.</p>
+                  }
+                </div>
+              </div>
+            }
+            
 
 						<div className="interact-wrapper" onTouchStart={this.handleMapTouchStart.bind(this)} onTouchEnd={this.handleMapTouchEnd.bind(this)}>
 							<div className={this.state.interact ? "icon-box active" : "icon-box"} onTouchEnd={(e) => this.handleInteract(e)}>
@@ -424,14 +282,8 @@ export default class TrackerMap extends Component {
 			          attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
 			          url='https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
 			        />
-              {(this.state.zoom < 11 && this.state.showFaults) &&
-                <TileLayer
-                  //url='https://earthquake.usgs.gov/arcgis/rest/services/eq/map_faults/MapServer/tile/{z}/{y}/{x}/'
-                  url='https://earthquake.usgs.gov/arcgis/rest/services/haz/hazfaults2014/MapServer/tile/{z}/{y}/{x}/'
-                />
-              }
 
-              {(this.state.layer == "fires" && this.state.firesUrl) &&
+              {(this.props.chosenLayer == "fires" && this.state.firesUrl) &&
                 <Pane name="fires">
                   <ImageOverlay 
                     className="fire-image"
@@ -446,15 +298,22 @@ export default class TrackerMap extends Component {
 
               }
 
-              {(this.state.layer == "quakes") &&
+              {(this.props.chosenLayer == "quakes") &&
                 <Pane name="quakes">
                   <TileLayer
                     opacity={0.65}
                     url='https://spatialservices.conservation.ca.gov/arcgis/rest/services/CGS_Earthquake_Hazard_Zones/SHP_Liquefaction_Zones/MapServer/tile/{z}/{y}/{x}/'
                   />
+                  {/*
                   <TileLayer
                     //url='https://earthquake.usgs.gov/arcgis/rest/services/eq/map_faults/MapServer/tile/{z}/{y}/{x}/'
                     url='https://earthquake.usgs.gov/arcgis/rest/services/haz/hazfaults2014/MapServer/tile/{z}/{y}/{x}/'
+                  />
+                  */}
+                  <ImageOverlay 
+                    className="fault-image"
+                    url={faultsSVG}
+                    bounds={[[45.45007611900008,-108.7211835399999], [ 29.65238198900004,-124.490694]]}
                   />
                   <TileLayer
                     attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -463,7 +322,7 @@ export default class TrackerMap extends Component {
                 </Pane>
               }
 
-              {(this.state.layer == "floods") &&
+              {(this.props.chosenLayer == "floods") &&
                 <Pane name="floods">
                   <TileLayer 
                     opacity={0.65}
@@ -475,16 +334,6 @@ export default class TrackerMap extends Component {
                   />
                 </Pane>
               }
-
-
-							{this.state.userPos &&
-								<Marker position={this.state.userPos} ref={this.markerRefs['markerme']}>
-			            <Popup autoPan={false} offset={[0, -10]}>
-			            	<div className="quake-near-results" dangerouslySetInnerHTML={{__html: this.state.nearbyLanguage}}>
-			            	</div>
-			            </Popup>
-			          </Marker>
-							}
 
 			      </Map>
 			    </div>
