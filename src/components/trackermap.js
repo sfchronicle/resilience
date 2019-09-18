@@ -18,7 +18,7 @@ const images = (ctx => {
 if (typeof window !== 'undefined') {
 	var L = require('leaflet');
 } 
-var {Map, TileLayer, Marker, Popup, Tooltip, GeoJSON, ImageOverlay} = require('react-leaflet');
+var {Map, TileLayer, Marker, Popup, Tooltip, GeoJSON, ImageOverlay, Pane} = require('react-leaflet');
 
 var geodist = require('geodist')
 
@@ -348,17 +348,10 @@ export default class TrackerMap extends Component {
 		  if (this.isMobile && this.state.interact){
 		  	wrapperClass += " fixed";
 		  }
-
-		  // Get window height to accomodate weird mobile things
-		  let windowHeight = window.innerHeight;
-
-      if (this.isMobile){
-        windowHeight -= 100;
-      }
 		  
 			return (
 				<div id="tracker-outer">
-					<div className={wrapperClass} style={{height:windowHeight}}>
+					<div className={wrapperClass}>
 					
 						<div className="counter-wrapper">
 							<div className="legend">
@@ -389,7 +382,6 @@ export default class TrackerMap extends Component {
                   <div className={this.state.layer == "fires" ? "option active" : "option"} onClick={(type) => this.setLayer("fires")}>Fires</div>
                   <div className={this.state.layer == "quakes" ? "option active" : "option"} onClick={(type) => this.setLayer("quakes")}>Quakes</div>
                   <div className={this.state.layer == "floods" ? "option active" : "option"} onClick={(type) => this.setLayer("floods")}>Floods</div>
-                  <div className={this.state.layer == "landslides" ? "option active" : "option"} onClick={(type) => this.setLayer("landslides")}>Landslides</div>
                 </div>
                 {/*
 								<div className="gradient-key">
@@ -430,7 +422,7 @@ export default class TrackerMap extends Component {
 			      <Map boxZoom={false} keyboard={false} touchZoom={this.state.interact} dragging={this.state.interact} scrollWheelZoom={false} center={this.state.mapCenter} zoom={this.state.zoom} maxZoom={17} minZoom={2} ref={this.map} onZoomend={this.onZoomEvent.bind(this)} onDragend={this.onDragEvent.bind(this)}>
 			        <TileLayer
 			          attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-			          url='https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+			          url='https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
 			        />
               {(this.state.zoom < 11 && this.state.showFaults) &&
                 <TileLayer
@@ -440,37 +432,50 @@ export default class TrackerMap extends Component {
               }
 
               {(this.state.layer == "fires" && this.state.firesUrl) &&
-                <ImageOverlay 
-                className="fire-image"
-                url={this.state.firesUrl}
-                bounds={[[this.state.bounds._northEast.lat,this.state.bounds._northEast.lng], [this.state.bounds._southWest.lat,this.state.bounds._southWest.lng]]}
-              />
+                <Pane name="fires">
+                  <ImageOverlay 
+                    className="fire-image"
+                    url={this.state.firesUrl}
+                    bounds={[[this.state.bounds._northEast.lat,this.state.bounds._northEast.lng], [this.state.bounds._southWest.lat,this.state.bounds._southWest.lng]]}
+                  />
+                  <TileLayer
+                    attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url='https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png'
+                  />
+                </Pane>
 
               }
 
               {(this.state.layer == "quakes") &&
-                <TileLayer
-                  url='https://spatialservices.conservation.ca.gov/arcgis/rest/services/CGS_Earthquake_Hazard_Zones/SHP_Liquefaction_Zones/MapServer/tile/{z}/{y}/{x}/'
-                />
-              }
-              {(this.state.layer == "quakes") &&
-                <TileLayer
-                  //url='https://earthquake.usgs.gov/arcgis/rest/services/eq/map_faults/MapServer/tile/{z}/{y}/{x}/'
-                  url='https://earthquake.usgs.gov/arcgis/rest/services/haz/hazfaults2014/MapServer/tile/{z}/{y}/{x}/'
-                />
+                <Pane name="quakes">
+                  <TileLayer
+                    opacity={0.65}
+                    url='https://spatialservices.conservation.ca.gov/arcgis/rest/services/CGS_Earthquake_Hazard_Zones/SHP_Liquefaction_Zones/MapServer/tile/{z}/{y}/{x}/'
+                  />
+                  <TileLayer
+                    //url='https://earthquake.usgs.gov/arcgis/rest/services/eq/map_faults/MapServer/tile/{z}/{y}/{x}/'
+                    url='https://earthquake.usgs.gov/arcgis/rest/services/haz/hazfaults2014/MapServer/tile/{z}/{y}/{x}/'
+                  />
+                  <TileLayer
+                    attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url='https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png'
+                  />
+                </Pane>
               }
 
               {(this.state.layer == "floods") &&
-                <TileLayer
-                  url='https://earthquake.usgs.gov/arcgis/rest/services/haz/hazfaults2014/MapServer/tile/{z}/{y}/{x}/'
-                />
+                <Pane name="floods">
+                  <TileLayer 
+                    opacity={0.65}
+                    url='https://coast.noaa.gov/arcgis/rest/services/FloodExposureMapper/CFEM_CoastalFloodHazardComposite/MapServer/tile/{z}/{y}/{x}'
+                  />
+                  <TileLayer
+                    attribution='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+                    url='https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png'
+                  />
+                </Pane>
               }
 
-              {(this.state.layer == "landslides") &&
-                <TileLayer
-                  url='https://spatialservices.conservation.ca.gov/arcgis/rest/services/CGS/LandslideInventory_DC1_Younger/MapServer/tile/{z}/{y}/{x}/'
-                />
-              }
 
 							{this.state.userPos &&
 								<Marker position={this.state.userPos} ref={this.markerRefs['markerme']}>

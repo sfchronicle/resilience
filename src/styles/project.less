@@ -48,7 +48,6 @@ body #project-wrapper {
 .flex-topper {
 	display: flex;
 	margin-bottom: 40px;
-	height: 100vh;
   overflow: hidden;
   border-bottom: 1px solid #ccc;
 
@@ -90,7 +89,8 @@ body #project-wrapper {
 
 			h1 {
 				margin:0;
-				font-size: 70px;
+				font-size: 42px;
+				font-family: @headline-bold;
 
 				@media @tablet {
 					font-size: 40px;
@@ -102,6 +102,10 @@ body #project-wrapper {
 				font-size: 16px;
 				max-width: 580px;
 				line-height: 22px;
+
+				&.byline {
+					font-size: 14px;
+				}
 
 				&.instructions {
 					font-family: @national-book;
@@ -131,19 +135,13 @@ body #project-wrapper {
 			max-width: 1400px;
 			margin-bottom: 20px;
 			overflow: hidden;
-
-			&.loading {
-				background-color: #ccc;
-				display: flex;
-				font-size: 120px;
-				justify-content: center;
-    		align-items: center;
-    		height: 100vh;
-			}
+			height: 100vh;
+			margin-bottom: 0;
 
 			// Overriding the mobile stuff
 			@media (min-width: 767px) {
 				height: calc(100vh - 115px);
+				min-height: 550px;
 			}
 
 			&.fixed {
@@ -157,13 +155,13 @@ body #project-wrapper {
 			}
 
 			.leaflet-container {
-				height: 100vh;
+				height: 100%;
 				width: 100%;
 				margin-top: 0px;
 				font-family: @med-graphics;
 
-				.fire-image {
-		    	opacity: 0.5;
+		    .fire-image {
+		    	opacity: 0.65;
 		    }
 
 				.leaflet-pane {
@@ -422,13 +420,14 @@ body #project-wrapper {
     				flex-wrap: wrap;
 
     				.option {
-    					flex: 0 0 calc(50% - 4px);
-    					padding: 5px;
+    					flex: 0 0 calc(100% - 4px);
+    					padding: 2px 5px;
     					border: 1px solid #666;
     					border-radius: 4px;
     					margin: 2px;
     					cursor: pointer;
     					font-weight: bold;
+    					font-size: 16px;
 
     					&:hover {
     						background: #ddd;
@@ -538,135 +537,7 @@ body #project-wrapper {
     	text-transform: uppercase;
     }
 	}
-
-	.quake-info{
-		font-size: 14.5px;
-	}
 }
-
-.quakes-list {
-	height: calc(100vh - 288px);
-	border-top: 2px solid #ccc;
-	border-bottom: 2px solid #ccc;
-	overflow-y: scroll;
-	background: white;
-
-	&.fixed {
-		position: fixed;
-		z-index: 100000;
-		background: white;
-	}
-
-	@media (max-width: 979px){
-		display: flex;
-		border-top: 1px solid #ccc;
-		border-bottom: 1px solid #ccc;
-		height: 117px;
-		overflow-y: hidden;
-		overflow-x: scroll;
-	}
-
-	@media @mobile {
-		height: 100px;
-	}
-
-	.quake-item {
-		border-bottom: 1px solid #ccc;
-		padding: 15px 20px;
-		overflow: auto;
-		cursor: pointer;
-
-		&:hover {
-			background-color: #eee;
-			&:after {
-				border-left-color: #eee;
-			}
-		}
-
-		&.active {
-			background-color: #eee;
-			&:after {
-				border-left-color: #eee;
-			}
-		}
-
-		&.alert {
-			background-color: #ffebec;
-			&:after {
-				border-left-color: #ffebec;
-			}
-
-			&:hover {
-				background-color: #ffaeb0;
-				&:after {
-					border-left-color: #ffaeb0;
-				}
-			}
-
-			&.active {
-				background-color: #ffaeb0;
-				&:after {
-					border-left-color: #ffaeb0;
-				}
-			}
-		}
-
-		&:last-child {
-			&:after, &:before {
-				border: none;
-			}
-		}
-
-		.bigmag {
-			border-right: 1px solid #ccc;
-			padding-right: 15px;
-		}
-
-		@media (max-width: 979px){
-			height: 100px;
-			flex: 0 0 250px;
-			position: relative;
-			border: none;
-			overflow: visible;
-			margin-right: 50px;
-			padding: 10px;
-
-			.quake-info{
-				font-size: 12px;
-				width: calc(100% + 10px);
-			}
-
-			.bigmag {
-				height: 100%;
-			}
-
-			&:after, &:before {
-				left: 100%;
-				top: 50%;
-				border: solid transparent;
-				content: " ";
-				height: 0;
-				width: 0;
-				position: absolute;
-				pointer-events: none;
-			}
-
-			&:after {
-				border-color: rgba(136, 183, 213, 0);
-				border-left-color: white;
-				border-width: 50px;
-				margin-top: -50px;
-			}
-			&:before {
-				border-color: rgba(204, 204, 204, 0);
-				border-left-color: #ccc;
-				border-width: 51px;
-				margin-top: -51px;
-			}
-		}
-	}
-}
-
 
 .recent-news-wrapper {
 	text-align:center;
@@ -684,6 +555,8 @@ body #project-wrapper {
 	justify-content: center;
 	flex-wrap: wrap;
 }
+
+
 
 .recent-item{
 

@@ -5,12 +5,16 @@ import TrackerMap from '../components/trackermap'
 import RecentNews from '../components/recentnews'
 import Credits from '../components/sfc/credits'
 import CreditLine from '../components/sfc/creditline'
+import Byline from '../components/sfc/byline'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 // Get data from config
 let projectConfig = require("../../project-config.json");
 let project = projectConfig.PROJECT;
+
+// Pull data from doc
+let docData = require("../data/Defending_Against_Disaster_mainbar.json");
 
 // Bring in moment to handle dates
 var moment = require('moment');
@@ -131,7 +135,17 @@ export default class IndexPage extends PureComponent {
 
   							<p className="instructions">This map highlights the risk areas in California for four major natural disasters: earthquakes, fires, floods and landslides. Enter your address to see which zones impact your home.</p>
             
-                  <p className="instructions"><time className="dateline intro-description" dateTime={moment(projectConfig.PROJECT.DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="datePublished">{ pubdateString }</time>
+                  <p className="byline"><span>By</span>
+                  { projectConfig.PROJECT.AUTHORS.map((author, index) => {
+                    // Pass special flag if this is the last item
+                    let isLast = false;
+                    if (index === projectConfig.PROJECT.AUTHORS.length - 1){
+                      isLast = true;
+                    }
+                    // Add the bylines
+                    return <Byline key={author.AUTHOR_NAME} url={author.AUTHOR_PAGE} name={author.AUTHOR_NAME} index={index} is_last={isLast} />
+                  })}
+                &nbsp;|&nbsp;<time className="dateline intro-description" dateTime={moment(projectConfig.PROJECT.DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="datePublished">{ pubdateString }</time>
                   { moddateString &&
                     <Fragment>
                       &nbsp;|&nbsp;<time className="dateline mod-date" dateTime={ moment(projectConfig.PROJECT.MOD_DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="dateModified">Updated: { moddateString }</time>
@@ -145,6 +159,13 @@ export default class IndexPage extends PureComponent {
 
             <TrackerMap ref={this.map} startLat={37.8044} startLng={-122.2711} />
 
+          </div>
+
+
+          <div className="article">
+            {docData.mainbar.map((item) => {
+              return <p>{item.value}</p>
+            })}
           </div>
 
           {env !== "app" &&     

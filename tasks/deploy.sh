@@ -113,15 +113,17 @@ if [ -d "/Volumes/SFGextras/Projects/" ]; then
 		if [[ $REPLY =~ ^[Yy]$ ]] || [ $deploy_type == "auto" ]; then
 		  echo "User confirmed deployment. Starting..."
 
+		  cp src/data/sfc/template.manifest "./public_export/manifest.webmanifest"
+
+		 	# Uncomment the lines below to prevent actual deploy for testing
+			# echo "EXIT EARLY!"
+			# exit 1
+
 			echo "Create folders in temp location if needed"
 			if [ ! -d "/Volumes/SFGextras/Projects/temp-deploy/$subfolder" ]; then
 				echo "Folder '$subfolder' created!"
 			  mkdir "/Volumes/SFGextras/Projects/temp-deploy/$subfolder"
 			fi
-
-			# Uncomment the lines below to prevent actual deploy for testing
-			# echo "EXIT EARLY!"
-			# exit 1
 
 		  echo "Uploading files to server in temp location..."
 		  # Only send command to background if it's a manual deploy
@@ -129,8 +131,6 @@ if [ -d "/Volumes/SFGextras/Projects/" ]; then
 		  	# Make auto deploy wait for full completion, or else files will be deleted too soon
 		  	cp -a public_export/. "/Volumes/SFGextras/Projects/temp-deploy/$subfolder/$slug"
 		  else
-		  	# Put the rebuild for dev into a subshell so we don't hear about it
-		  	(gatsby build >/dev/null &)
 		  	# Manual deploys get cool spinner
 		  	cp -a public_export/. "/Volumes/SFGextras/Projects/temp-deploy/$subfolder/$slug" &
 		  	spinner
@@ -144,10 +144,29 @@ if [ -d "/Volumes/SFGextras/Projects/" ]; then
 
 		  echo "Moving new files into final location"
 		  mv "/Volumes/SFGextras/Projects/temp-deploy/$subfolder/$slug" "/Volumes/SFGextras/Projects/$subfolder/$slug"
-		  echo -e "${GREEN}DEPLOY COMPLETE.${NC} Exiting..."
+		  echo -e "${GREEN}DEPLOY COMPLETE.${NC} Running final checks..."
+
+		  # ONE FINAL CHECK
+		  # Make sure the final URL exists on server now
+		  http_code=$(curl -s -o /dev/null -w "%{http_code}" https://projects.sfchronicle.com/$subfolder/$slug/)
+		  slack_webhook="https://hooks.slack.com/services/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"
+
+		  if [ $http_code != 200 ]; then
+		  	# Emergency bad deploy message
+		  	result_string="*DEPLOY ERROR*: Alert <@U9JQHF80J> - this project did not deploy correctly (status code is $http_code)!\nhttps://projects.sfchronicle.com/$subfolder/$slug/"
+		  	# But actually fine if it's just a 401 for test-proj
+			  if [ $http_code == 401 ]; then
+			  	result_string="*DEPLOY INFO*: Your test deploy should be live at this URL:\nhttps://projects.sfchronicle.com/$subfolder/$slug/"
+			  fi
+		  else
+		  	# Default happy message
+		  	result_string="*DEPLOY FINALIZED*: Project should be live at this URL:\nhttps://projects.sfchronicle.com/$subfolder/$slug/"
+		  fi
+		  # Send result
+		  curl -X POST -H 'Content-type: application/json' --data '{"link_names":1,"text":"'"$result_string"'"}' $slack_webhook
+		  
 		else 
-			echo "INFO: User cancelled deployment. Exiting and rebuilding for dev..."
-			gatsby build >/dev/null
+			echo "INFO: User cancelled deployment. Exiting..."
 		fi
   else
 		# We couldn't access subfolder

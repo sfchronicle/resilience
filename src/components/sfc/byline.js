@@ -18,9 +18,7 @@ class Byline extends Component {
       	{ (this.props.url) ? (
             <Fragment>
               {prefix}
-              <a target="_blank" rel="author noopener noreferrer" href={this.props.url}>
-                <span>{this.props.name}</span>
-              </a>
+              <span>{this.props.name}</span>
             </Fragment>
         	) : (
         		<span>{prefix}{this.props.name}</span>
