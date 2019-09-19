@@ -209,69 +209,6 @@ body #project-wrapper {
 							display: none;
 						}
 					}
-
-					.quake-icon {
-						display: flex;
-					  justify-content: center;
-					  align-items: center;
-
-					  .quake-wrapper {
-							padding: 5px;
-							background: black;
-							border: 2px solid white;
-							border-radius: 136px;
-						}
-
-					  &.circleMax {
-					  	.quake-wrapper {
-					  		padding: @sizeMax/2;
-					  	}
-					  }
-					  &.circle6 {
-					  	.quake-wrapper {
-					  		padding: @size6/2;
-					  	}
-					  }
-					  &.circle5 {
-					  	.quake-wrapper {
-					  		padding: @size5/2;
-					  	}
-					  }
-					  &.circle4 {
-					  	.quake-wrapper {
-					  		padding: @size4/2;
-					  	}
-					  }
-					  &.circle3 {
-					  	.quake-wrapper {
-					  		padding: @size3/2;
-					  	}
-					  }
-					}
-
-					// Loop to create the ripple effect
-					@iterations: 20;
-					.mag-anim-loop (@i) when (@i > 0) {
-						//@reverseNumber: 20 - @i;
-						@magTitle: ~"mag_@{i}";
-				    .magnitude_anim_@{i} {
-				      animation: @magTitle 20s infinite; //width: ~"@{i}%";
-				    }
-				    .mag-anim-loop(@i - 1);
-					}
-					.mag-anim-loop (@iterations);
-
-					// Loop to create the color gradient
-					@color_iterations: 20;
-					.mag-color-loop (@i) when (@i > 0) {
-						@darkening: @i * 5;
-				    .color_mag_@{i} {
-				      stroke: darken(#7bcdbb, @darkening);
-				    }
-				    .mag-color-loop(@i - 1);
-					}
-					.mag-color-loop (@color_iterations);
-
 				}
 			}
 
@@ -490,11 +427,12 @@ body #project-wrapper {
 				z-index: 500;
 				font-family: @med-graphics;
 
-				// @media (max-width: 979px) {
-				// 	right: 0;
-				// 	left: 0;
-				// 	bottom: 0;
-				// }
+				@media (max-width: 979px) {
+					right: 10px;
+					top: 10px;
+					left: auto;
+					bottom: auto;
+				}
 
 				svg {
 					cursor: pointer;
