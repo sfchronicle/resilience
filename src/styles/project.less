@@ -67,6 +67,49 @@ body #project-wrapper {
 	@media @mobile{
 		margin-top:15px;
 	}
+
+	.layer-text {
+		position: relative;
+
+		&.mobile {
+			display: none;
+
+			.instructions {
+				display: none;
+				font-family: @med-graphics;
+				max-width: 500px;
+				margin: 0px auto 35px;
+				padding: 15px;
+				background-color: #eee;
+				border-radius: 4px;
+				text-align: center;
+
+				&.show {
+					display: block;
+				}
+			}
+		}
+		&.desktop {
+			.instructions {
+				position: absolute;
+				transition: opacity 0.2s;
+				opacity: 0;
+
+				&.show {
+					opacity: 1;
+				}
+			}
+		}
+
+		@media (max-width: 979px){
+			&.mobile {
+				display: block;
+			}
+			&.desktop {
+				display: none;
+			}
+		}
+	}
 }
 
 .flex-topper {
@@ -140,20 +183,6 @@ body #project-wrapper {
 
 					#recent-report {
 						font-family: @block-graphics;
-					}
-				}
-			}
-
-			.layer-text {
-				position: relative;
-
-				.instructions {
-					position: absolute;
-					opacity: 0;
-					transition: opacity 0.2s;
-
-					&.show {
-						opacity: 1;
 					}
 				}
 			}
