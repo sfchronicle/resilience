@@ -227,14 +227,8 @@ export default class IndexPage extends PureComponent {
             <Credits type="Executive Producer">
               <CreditLine name="Brittany Schell" email="BSchell@sfchronicle.com" twitter="brittlynns" />
             </Credits>
-            <Credits type="Managing Editor, Enterprise">
-              <CreditLine name="Michael Gray" email="mgray@sfchronicle.com" twitter="GrayMikeG" />
-            </Credits>
             <Credits type="Managing Editor, Digital">
               <CreditLine name="Tim O'Rourke" email="torourke@sfchronicle.com" twitter="TimothyORourke" />
-            </Credits>
-            <Credits type="Editor In Chief">
-              <CreditLine name="Audrey Cooper" email="acooper@sfchronicle.com" twitter="audreycoopersf" />
             </Credits>
           </div>
 		    </div>
