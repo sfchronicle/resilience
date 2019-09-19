@@ -1,17 +1,22 @@
 [
 	{	
-		"title": "S.F.'s Snow Day: Interactive look at 1976 'miracle'",
-		"url": "https://projects.sfchronicle.com/guides/san-francisco-snow/",
-		"image": "https://s.hdnux.com/photos/0/0/0/8898608/0/premium_gallery_landscape.jpg"
+		"title": "Lessons from Santa Rosa",
+		"url": "https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-Santa-Rosa-after-the-14453148.php",
+		"image": "https://s.hdnux.com/photos/71/06/77/14970839/7/premium_gallery_landscape.jpg"
 	},
 	{	
-		"title": "Look-back: In 2017, S.F.'s car break-in epidemic looked bleak",
-		"url": "https://projects.sfchronicle.com/2018/sf-car-breakins/",
-		"image": "https://s.hdnux.com/photos/01/00/43/63/16923896/4/premium_gallery_landscape.jpg"
+		"title": "Lessons from San Francisco",
+		"url": "https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-the-1989-Loma-Prieta-14453153.php",
+		"image": "https://s.hdnux.com/photos/01/05/57/14/18281243/3/premium_gallery_landscape.jpg"
 	},
 	{	
-		"title": "San Francisco chipping away at auto break-in epidemic — but don’t tell that to these newlyweds",
-		"url": "https://www.sfchronicle.com/crime/article/San-Francisco-chipping-away-at-auto-break-in-13615047.php",
-		"image": "https://s.hdnux.com/photos/01/00/42/20/16917548/5/premium_gallery_landscape.jpg"
+		"title": "Lessons from San Jose",
+		"url": "https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-the-San-Jose-flood-of-2017-14453140.php",
+		"image": "https://s.hdnux.com/photos/57/31/47/12425671/7/premium_gallery_landscape.jpg"
+	},
+	{	
+		"title": "The Chronicle's Survival Guide",
+		"url": "http://www.sfchronicle.com/survival-guide/",
+		"image": "https://s.hdnux.com/photos/67/44/32/14567074/10/premium_gallery_landscape.jpg"
 	}
 ]

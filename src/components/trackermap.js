@@ -248,7 +248,7 @@ export default class TrackerMap extends Component {
                     <p>Cal Fire ranks areas of California by Fire Hazard Severity Zones (FHSZ) based on fuels, weather conditions, terrain and potential damage to buildings and infrastructure. The <span className="darkred">darkest red</span> are very high FHSZ that fall under local jurisdiction. The other colors represent <span className="lightred">very high</span>, <span className="orange">high</span> and <span className="yellow">moderate</span> FHSZ that are under state control.</p>
                   }
                   {this.props.chosenLayer === "floods" &&
-                    <p>This map shows NOAA's Coastal Flood Hazard Composite rating, which scales from <span className="heavyflood">most impacted</span> to <span className="lightflood">least impacted</span>. The composite data includes risks of high tide flooding, annual flooding, sea level rise scenarios and tsunami run-up zones. The gray areas have not yet been assessed.</p>
+                    <p>The map shows the National Oceanic and Atmospheric Administration’s Coastal Flood Hazard Composite rating, which scales from <span className="heavyflood">most impacted</span> to <span className="lightflood">least impacted</span>. The composite data include risks of high tide flooding, annual flooding, sea level rise scenarios and tsunami run-up zones. The gray areas have not yet been assessed.</p>
                   }
                 </div>
               </div>

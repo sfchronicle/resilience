@@ -8,6 +8,56 @@
 
 // Project CSS goes below
 
+.article {
+  max-width: 1200px;
+
+  p, h2 {
+  	max-width: 730px;
+  	margin: 0 auto 1em;
+  }
+}
+
+.wcm-image-wrapper {
+	line-height: 0;
+}
+
+.caption {
+	font-size: 14px;
+
+	.credit {
+		font-size: 14px;
+		color: #666;
+	}
+}
+
+.text-box {
+  float: right;
+  margin: 0 0 10px 10px;
+  width: 500px;
+  max-width: 100%;
+  border-left: 1px solid #ccc;
+  padding: 0 20px;
+
+  @media @tablet {
+  	float: none;
+  	margin: auto;
+  }
+
+  h3 {
+  	font-size: 16px;
+  	font-family: @block-graphics;
+  }
+
+  p {
+  	font-family: @med-graphics;
+  	font-size: 15px;
+  }
+}
+
+figure {
+	width: 500px;
+}
+
 body.noscroll, html.noscroll {
 	height: 0;
 	overflow: hidden;
@@ -19,7 +69,6 @@ p.label-text {
 	font-family: @block-graphics;
 	letter-spacing: 0.05em;
 	text-align: center;
-	font-size: 14px !important;
 	margin-bottom: 0;
 	margin-top: 15px;
 }
@@ -44,6 +93,12 @@ body #project-wrapper {
 		text-align: center;
 		font-family: @banner;
 		font-size: 23px;
+
+		&.subhed {
+			font-family: @headline-bold;
+			font-size: 30px;
+			text-align: left;
+		}
 
 		@media (max-width: 979px){
 			font-size: 20px;
@@ -94,6 +149,7 @@ body #project-wrapper {
 				position: absolute;
 				transition: opacity 0.2s;
 				opacity: 0;
+				font-family: @bold-graphics !important;
 
 				&.show {
 					opacity: 1;
