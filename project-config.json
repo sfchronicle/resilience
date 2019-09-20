@@ -1,6 +1,6 @@
 {
   "_comment": "The possible paywall values are 'meter' (wall after 5), 'paywall' (wall immediately), or 'free' (no wall)",
-  "PAYWALL_SETTING": "meter",
+  "PAYWALL": "meter",
   "EMBEDDED": false,
   "GOOGLE_SHEETS": [],
   "GOOGLE_DOCS": ["1vSrvHTCN4lCuzlrkfNntzUvUe4W0BN8OiCSHx22sGJY"],

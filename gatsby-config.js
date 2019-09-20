@@ -28,18 +28,6 @@ module.exports = {
       },
     },
     'gatsby-plugin-react-leaflet',
-    {
-      resolve: `gatsby-plugin-manifest`,
-      options: {
-        name: 'San Francisco Chronicle',
-        short_name: 'SF Chronicle',
-        start_url: '.',
-        background_color: '#eeeeee',
-        theme_color: '#eeeeee',
-        display: 'standalone',
-        icon: 'src/images/sfc-icon.png', 
-      },
-    },
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.app/offline
     // 'gatsby-plugin-offline',

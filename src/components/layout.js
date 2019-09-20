@@ -98,7 +98,7 @@ class Layout extends Component {
         <Helmet>
           <title>{this.props.title}</title> 
           <meta name="description" content={ this.props.description } />
-          <meta name="__sync_contentCategory" content={ this.props.paywall } />
+
           <link rel="shortcut icon" href="https://www.sfchronicle.com/favicon.ico" type="image/x-icon" />
 
           <meta name="twitter:card" content="summary_large_image" />
