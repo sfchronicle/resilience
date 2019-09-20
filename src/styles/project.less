@@ -131,6 +131,7 @@ body #project-wrapper {
 
 			.instructions {
 				display: none;
+				pointer-events: none;
 				font-family: @med-graphics;
 				max-width: 500px;
 				margin: 0px auto 35px;
@@ -141,6 +142,7 @@ body #project-wrapper {
 
 				&.show {
 					display: block;
+					pointer-events: auto;
 				}
 			}
 		}
@@ -150,9 +152,11 @@ body #project-wrapper {
 				transition: opacity 0.2s;
 				opacity: 0;
 				font-family: @bold-graphics !important;
+				pointer-events: none;
 
 				&.show {
 					opacity: 1;
+					pointer-events: auto;
 				}
 			}
 		}
@@ -338,36 +342,46 @@ body #project-wrapper {
 		    	span {
 		    		font-family: @block-graphics;
 
+		    		&.green, &.yellow, &.red, &.darkred, &.lightred, &.orange, &.yellow, &.heavyflood, &.lightflood {
+		    			// text-shadow:
+						   // -1px -1px 0 #333,  
+						   //  1px -1px 0 #333,
+						   //  -1px 1px 0 #333,
+						   //   1px 1px 0 #333;
+						   padding: 0 3px;
+						   border-radius: 3px;
+		    		}
+
 		    		&.green {
-		    			color: #60a288;
+		    			background-color: #60a288;
 		    		}
 
 		    		&.red {
-		    			color: #fc2f2c;
+		    			background-color: #fc2f2c;
 		    		}
 
 		    		&.darkred {
-		    			color: #fc616a;
+		    			background-color: #fc616a;
 		    		}
 
 		    		&.lightred {
-		    			color: #f9d1d0;
+		    			background-color: #f9d1d0;
 		    		}
 
 		    		&.orange {
-		    			color: #f6dca8;
+		    			background-color: #f6dca8;
 		    		}
 
 		    		&.yellow {
-		    			color: #f0f19e;
+		    			background-color: #f0f19e;
 		    		}
 
 		    		&.heavyflood {
-		    			color: #d20915;
+		    			background-color: #d20915;
 		    		}
 
 		    		&.lightflood {
-		    			color: #feea5f;
+		    			background-color: #feea5f;
 		    		}
 		    	}
 
