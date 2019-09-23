@@ -139,7 +139,6 @@ export default class IndexPage extends PureComponent {
                   </div>
                 </a>
 
-                <p className="label-text">Editorial</p>
                 <h1>{project.DISPLAY_HEADLINE}</h1>
 
                 <div className="social-box">
@@ -162,17 +161,8 @@ export default class IndexPage extends PureComponent {
                   </div>
                 </div>
 
-                <p className="byline"><span>By</span>
-                  { projectConfig.PROJECT.AUTHORS.map((author, index) => {
-                    // Pass special flag if this is the last item
-                    let isLast = false;
-                    if (index === projectConfig.PROJECT.AUTHORS.length - 1){
-                      isLast = true;
-                    }
-                    // Add the bylines
-                    return <Byline key={author.AUTHOR_NAME} url={author.AUTHOR_PAGE} name={author.AUTHOR_NAME} index={index} is_last={isLast} />
-                  })}
-                &nbsp;|&nbsp;<time className="dateline intro-description" dateTime={moment(projectConfig.PROJECT.DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="datePublished">{ pubdateString }</time>
+                <p className="byline">
+                  <time className="dateline intro-description" dateTime={moment(projectConfig.PROJECT.DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="datePublished">{ pubdateString }</time>
                   { moddateString &&
                     <Fragment>
                       &nbsp;|&nbsp;<time className="dateline mod-date" dateTime={ moment(projectConfig.PROJECT.MOD_DATE, "MMMM D, YYYY h:mm a").format("YYYY-MM-DDTHH:mm:ssZ") } itemProp="dateModified">Updated: { moddateString }</time>
@@ -181,46 +171,12 @@ export default class IndexPage extends PureComponent {
 
   							<p className="instructions">This map highlights the risk areas in California for three major natural disasters: fires, earthquakes and floods. Select a layer to see the risk areas.</p>
 
-                <div className="layer-text desktop">
-                  <p className={this.state.layer === "fires" ? "instructions show" : "instructions"}>Climate change will bring more wildfires through residential areas. The best way to fight them begins before your neighborhood is at risk.<br /><br /><a href="https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-Santa-Rosa-after-the-14453148.php" target="_blank">Lessons from Santa Rosa &raquo;</a></p>
-                  <p className={this.state.layer === "quakes" ? "instructions show" : "instructions"}>There's a 72% probability that a major earthquake will strike the Bay Area by 2043. Here's what your community should do now.<br /><br /><a href="https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-the-1989-Loma-Prieta-14453153.php" target="_blank">Lessons from San Francisco &raquo;</a></p>
-                  <p className={this.state.layer === "floods" ? "instructions show" : "instructions"}>Tens of thousands of Bay Area homes may experience chronic flooding as sea levels rise. What one city learned when it happened there in 2017.<br /><br /><a href="https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-the-San-Jose-flood-of-2017-14453140.php" target="_blank">Lessons from San Jose &raquo;</a></p>
-                </div>
-
-
 
               </div>
             </div>
 
             <TrackerMap ref={this.map} startLat={37.8044} startLng={-122.2711} chosenLayer={this.state.layer} setLayer={this.setLayer.bind(this)} />
 
-          </div>
-
-          <div className="article">
-            <div className="layer-text mobile">
-              <p className={this.state.layer === "fires" ? "instructions show" : "instructions"}>Climate change will bring more wildfires through residential areas. The best way to fight them begins before your neighborhood is at risk.<br /><a href="https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-Santa-Rosa-after-the-14453148.php" target="_blank">Lessons from Santa Rosa &raquo;</a></p>
-              <p className={this.state.layer === "quakes" ? "instructions show" : "instructions"}>There's a 72% probability that a major earthquake will strike the Bay Area by 2043. Here's what your community should do now.<br /><a href="https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-the-1989-Loma-Prieta-14453153.php" target="_blank">Lessons from San Francisco &raquo;</a></p>
-              <p className={this.state.layer === "floods" ? "instructions show" : "instructions"}>Tens of thousands of Bay Area homes may experience chronic flooding as sea levels rise. What one city learned when it happened there in 2017.<br /><a href="https://www.sfchronicle.com/opinion/editorials/article/Editorial-Lessons-from-the-San-Jose-flood-of-2017-14453140.php" target="_blank">Lessons from San Jose &raquo;</a></p>
-            </div>
-
-            <h2 className="subhed">Where's the risk &mdash; and how to prepare</h2>
-
-            {docData.mainbar.map((item) => {
-              if (item.type === "text"){
-                return <p dangerouslySetInnerHTML={{__html: item.value}}></p>
-              } else if (item.type === "image"){
-                return <figure className="float-right">
-                  <WCMImage WCMID={item.value.id}/>
-                  <figcaption className="caption">{item.value.caption} <span className="credit">{item.value.credit}</span></figcaption>
-                </figure>
-              } else if (item.type === "box"){
-                return <div className="text-box">
-                  <h3>{item.value.title}</h3>
-                  <p>{item.value.text}</p>
-                </div>
-              } 
-              
-            })}
           </div>
 
           <section className="related-link-wrapper">

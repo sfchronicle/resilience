@@ -6,7 +6,7 @@
   "GOOGLE_DOCS": ["1vSrvHTCN4lCuzlrkfNntzUvUe4W0BN8OiCSHx22sGJY"],
   "PROJECT": {
     "_comment": "IMPORTANT: SUBFOLDER and SLUG for used for file pathing and the deploy script! Take care with your edits to them! NOTE: Stage deploys will automatically go to 'test-proj'",
-    "SUBFOLDER": "2019",
+    "SUBFOLDER": "trackers",
     "SLUG": "california-danger-zones",
     "DISPLAY_HEADLINE": "California Danger Zones",
     "IMAGE": "https://s.hdnux.com/photos/01/05/62/14/18293554/4/1600x0.jpg",
