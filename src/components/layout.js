@@ -100,6 +100,7 @@ class Layout extends Component {
           <meta name="description" content={ this.props.description } />
 
           <link rel="shortcut icon" href="https://www.sfchronicle.com/favicon.ico" type="image/x-icon" />
+          <link rel="canonical" href={ this.props.url } />
 
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:title" content={ this.props.social_title } />
