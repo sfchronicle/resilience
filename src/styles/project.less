@@ -17,6 +17,19 @@
   }
 }
 
+.sec {
+	text-align: center; 
+	margin-bottom: 20px;
+
+	.sec-h2 {
+		font-size: 30px;
+		border-bottom: 1px solid #222;
+		width: auto;
+		display: inline;
+	}
+}
+
+
 .wcm-image-wrapper {
 	line-height: 0;
 }
@@ -86,6 +99,7 @@ p.label-text {
   line-height: 0.5;
 }
 
+
 body #project-wrapper {
 	margin-top: 0;
 
@@ -104,6 +118,48 @@ body #project-wrapper {
 			font-size: 20px;
 		}
 	}
+
+	.related-block {
+			display: flex;
+			justify-content: center;
+			align-items: flex-end;
+			width: 100%;
+			max-width: 800px;
+			margin: auto;
+			margin-bottom: 30px;
+
+			@media @tablet {
+				display: block;
+				padding: 0 10px;
+			}
+
+			.thumb {
+				flex: 0 0 40%;
+
+				img {
+					width: 100%;
+				}
+			}
+
+			.text-block {
+				flex: 0 0 60%;
+
+				h2 {
+					text-align: left;
+					padding: 0 15px;
+					margin-bottom: 10px;
+					margin-top: 10px;
+					color: #222;
+				}
+
+				p {
+					font-family: @med-graphics;
+					margin-bottom: 5px;
+					color: #222;
+					line-height: 1.3;
+				}
+			}
+		}
 
 	.related-link-wrapper {
 		margin-top: 30px;

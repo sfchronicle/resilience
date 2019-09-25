@@ -1,17 +1,20 @@
 [
 	{	
 		"title": "The Chronicle's Survival Guide",
+		"deck": "The best tips, inventive ideas, and creative graphics to help you survive the next disaster",
 		"url": "http://www.sfchronicle.com/survival-guide/",
-		"image": "https://s.hdnux.com/photos/67/44/32/14567074/10/premium_gallery_landscape.jpg"
+		"image": "https://s.hdnux.com/photos/67/44/32/14567074/10/600x0.jpg"
 	},
 	{	
 		"title": "The California Fire Tracker",
+		"deck": "Providing the latest information on wildfires burning across California and in past fire seasons",
 		"url": "https://projects.sfchronicle.com/trackers/california-fire-map/",
-		"image": "https://s.hdnux.com/photos/0/0/0/0/18149429/4/premium_gallery_landscape.jpg"
+		"image": "https://s.hdnux.com/photos/0/0/0/0/18149429/4/600x0.jpg"
 	},
 	{	
 		"title": "Latest quakes in California and beyond",
+		"deck": "A map of significant quakes that have occurred in the past 30 days in real time",
 		"url": "https://projects.sfchronicle.com/trackers/earthquakes/",
-		"image": "https://s.hdnux.com/photos/75/62/32/17243022/4/premium_gallery_landscape.jpg"
+		"image": "https://s.hdnux.com/photos/75/62/32/17243022/4/600x0.jpg"
 	}
 ]

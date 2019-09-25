@@ -179,9 +179,24 @@ export default class IndexPage extends PureComponent {
 
           </div>
 
-          <section className="related-link-wrapper">
-            <RelatedRow links={linkArray}/>
-          </section>
+
+          <div className="sec">
+            <h2 className="sec-h2">More Chronicle disaster coverage</h2>
+          </div>
+          
+          {linkArray.map((item) => {
+            return <a href={item.url}>
+              <div className="related-block">
+                <div className="thumb">
+                  <img src={item.image} alt={item.title} />
+                </div>
+                <div className="text-block">
+                  <h2>{item.title}</h2>
+                  <p>{item.deck}</p>
+                </div>
+              </div>
+            </a>
+          })}
 
           <div id="credits">
             <h2>Credits</h2>
